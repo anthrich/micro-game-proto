@@ -21,5 +21,4 @@ gameServer.register("game_room", GameRoom);
 app.use(express.static(path.join(__dirname, "static")));
 
 httpServer.listen(port);
-
 console.log(`Listening on http://localhost:${ port }`);

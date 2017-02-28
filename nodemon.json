@@ -1,9 +1,9 @@
 {
   "watch": [
-    "rooms/**/*.js"
+    "**/*.ts"
   ],
   "ignore": [],
-  "ext" : "js",
+  "ext" : "ts",
   "exec": "tsc && node --harmony --debug",
   "script" : "index.js"
 }

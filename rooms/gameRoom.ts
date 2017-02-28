@@ -4,12 +4,9 @@ import MovementComponent from '../../gremmage/src/js/game-engine/movement-compon
 
 class ServerGameObject extends GameObject {
 	
-	clientId: string;
-	
 	constructor(clientId: string) {
-		super();
+		super(clientId);
 		this.addComponent(new MovementComponent())
-		this.clientId = clientId;
 	}
 }
 
@@ -46,16 +43,16 @@ export class GameRoom extends Room<any> {
 	}
 	
 	onLeave(client) {
-		console.log(client.id, "left game!");
+		this.gameState.gameObjects = this.gameState.gameObjects
+			.filter(go => go.id != client.id);
 	}
 	
 	onMessage(client, data) {
 		console.log(client.id, "sent message on GameRoom")
 		var currentObject = this.gameState.gameObjects
-			.find((go) => {
-				return go.clientId === client.id
-			});
+			.find(go => go.id === client.id);
 		currentObject.components
+			.filter(c => c instanceof MovementComponent)
 			.forEach((c) => {
 				let mc = c as MovementComponent;
 				mc.targetPosition.x = data.x;
