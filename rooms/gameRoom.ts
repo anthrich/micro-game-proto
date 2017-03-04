@@ -1,12 +1,15 @@
 import {Room} from "colyseus";
 import GameObject from '../../gremmage/src/js/game-engine/game-object';
 import MovementComponent from '../../gremmage/src/js/game-engine/movement-component';
+import {PlayerFactory} from "../player/playerFactory";
 
 class ServerGameObject extends GameObject {
-	
-	constructor(clientId: string) {
-		super(clientId);
-		this.addComponent(new MovementComponent())
+	playerId : number;
+
+	constructor(playerId: number, gameObjectId : string) {
+		super(gameObjectId);
+		this.addComponent(new MovementComponent());
+		this.playerId = playerId;
 	}
 }
 
@@ -14,6 +17,7 @@ export class GameRoom extends Room<any> {
 	
 	gameState: any;
 	delta: number;
+	playerFactory : PlayerFactory;
 	
 	constructor(options) {
 		super(options)
@@ -27,8 +31,12 @@ export class GameRoom extends Room<any> {
 		// // Call this function if you intend to implement delay compensation
 		// // techniques in your game
 		// this.useTimeline()
-		this.gameState = {gameObjects: []};
-		this.setState(this.gameState)
+		this.gameState = {
+			players: [],
+			gameObjects: []
+		};
+		this.setState(this.gameState);
+		this.playerFactory = new PlayerFactory();
 	}
 	
 	requestJoin(options) {
@@ -38,17 +46,28 @@ export class GameRoom extends Room<any> {
 	
 	onJoin(client) {
 		console.log(client.id, "joined game!");
-		let newPlayer = new ServerGameObject(client.id);
-		this.gameState.gameObjects.push(newPlayer);
+
+		let newPlayer = this.playerFactory.make(client.id, this.addPlayerToState);
+
+		let object = new ServerGameObject(newPlayer.id, client.id);
+
+		newPlayer.addObject(object);
+
+		this.gameState.gameObjects.push(object);
 	}
 	
 	onLeave(client) {
+		console.log(client.id, "left on GameRoom");
+
+		this.gameState.players = this.gameState.players
+            .filter(pl => pl.clientId != client.id);
+
 		this.gameState.gameObjects = this.gameState.gameObjects
 			.filter(go => go.id != client.id);
 	}
 	
 	onMessage(client, data) {
-		console.log(client.id, "sent message on GameRoom")
+		console.log(client.id, "sent message on GameRoom");
 		var currentObject = this.gameState.gameObjects
 			.find(go => go.id === client.id);
 		currentObject.components
@@ -68,19 +87,14 @@ export class GameRoom extends Room<any> {
 		this.gameState.gameObjects.forEach((go) => {
 			go.update(this.delta);
 		});
-		// This is your 'game loop'.
-		// Inside function you'll have to run the simulation of your game.
-		//
-		// You should:
-		// - move entities
-		// - check for collisions
-		// - update the state
-		//
-		
-		// // Uncomment this line to see the simulation running and clients receiving the patched state
-		// // In this example, the server simply adds the elapsedTime every 2 messages it receives
-		// if ( this.state.messages.length % 3 == 0 ) {
-		//   this.state.messages.push(`${ this.clock.elapsedTime }: even`)
-		// }
+	}
+
+	/**
+	 * Adds player to gamestate.
+	 *
+	 * @param player
+	 */
+	addPlayerToState = (player) => {
+		this.gameState.players.push(player);
 	}
 }
