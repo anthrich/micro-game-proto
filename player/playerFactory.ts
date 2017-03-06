@@ -1,6 +1,9 @@
 "use strict";
 
 import {Player} from '../../gremmage/src/js/example-app/player';
+import {PlayerSelections} from "./playerSelections";
+import {ServerGameObject} from "../game-objects/ServerGameObject";
+var uuid = require('uuid/v1');
 
 export class PlayerFactory {
 
@@ -16,19 +19,41 @@ export class PlayerFactory {
     }
 
     /**
+     *
      * @param clientId
-     * @param props
+     * @param playerSelections
      * @param updateGameState
      * @returns {Player}
      */
-    make(clientId : string, updateGameState : Function) : Player
+    make(clientId : string, playerSelections : PlayerSelections) : Player
     {
         var player = new Player(this.playerCount, this.colors[this.playerCount], clientId);
 
         this.playerCount ++;
 
-        updateGameState(player);
+        let objects  = this.createGameObjects(player, playerSelections.getSelections());
+
+        objects.forEach(o => player.addObject(o));
 
         return player;
+    }
+
+    /**
+     * Temp code: probably want a separate factory
+     * for this, once we figure out how it's going
+     * to work.
+     *
+     * @param player
+     * @param playerSelections
+     */
+    protected createGameObjects(player, playerSelections: Array<string>)
+    {
+        let payload = Array<ServerGameObject>();
+
+        playerSelections.forEach((s) => {
+            payload.push(new ServerGameObject(player.id, uuid()));
+        });
+
+        return payload;
     }
 }

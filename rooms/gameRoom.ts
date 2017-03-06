@@ -1,17 +1,7 @@
 import {Room} from "colyseus";
-import GameObject from '../../gremmage/src/js/game-engine/game-object';
 import MovementComponent from '../../gremmage/src/js/game-engine/movement-component';
 import {PlayerFactory} from "../player/playerFactory";
-
-class ServerGameObject extends GameObject {
-	playerId : number;
-
-	constructor(playerId: number, gameObjectId : string) {
-		super(gameObjectId);
-		this.addComponent(new MovementComponent());
-		this.playerId = playerId;
-	}
-}
+import {PlayerSelections} from "../player/playerSelections";
 
 export class GameRoom extends Room<any> {
 	
@@ -46,14 +36,8 @@ export class GameRoom extends Room<any> {
 	
 	onJoin(client) {
 		console.log(client.id, "joined game!");
-
-		let newPlayer = this.playerFactory.make(client.id, this.addPlayerToState);
-
-		let object = new ServerGameObject(newPlayer.id, client.id);
-
-		newPlayer.addObject(object);
-
-		this.gameState.gameObjects.push(object);
+		let player = this.playerFactory.make(client.id, this.getPlayerSelections());
+		this.addPlayerToState(player);
 	}
 	
 	onLeave(client) {
@@ -67,16 +51,22 @@ export class GameRoom extends Room<any> {
 	}
 	
 	onMessage(client, data) {
-		console.log(client.id, "sent message on GameRoom");
-		var currentObject = this.gameState.gameObjects
-			.find(go => go.id === client.id);
-		currentObject.components
-			.filter(c => c instanceof MovementComponent)
-			.forEach((c) => {
-				let mc = c as MovementComponent;
-				mc.targetPosition.x = data.x;
-				mc.targetPosition.y = data.y;
-			})
+		let currentPlayer = this.getPlayerByClientId(client.id);
+
+		data.selected.forEach((s) =>{
+			let playerObject = currentPlayer.gameObjects
+                .find(go => go.id = s.id);
+
+			if(!playerObject) return;
+
+			playerObject.components
+				.filter(c => c instanceof MovementComponent)
+                .forEach((c) => {
+					let mc = c as MovementComponent;
+					mc.targetPosition.x = data.x;
+					mc.targetPosition.y = data.y;
+				})
+		});
 	}
 	
 	onDispose() {
@@ -90,11 +80,35 @@ export class GameRoom extends Room<any> {
 	}
 
 	/**
-	 * Adds player to gamestate.
-	 *
 	 * @param player
 	 */
 	addPlayerToState = (player) => {
 		this.gameState.players.push(player);
+
+		player.gameObjects.forEach(go => this.gameState.gameObjects.push(go));
+	}
+
+	/**
+	 * Temp code until 'selection/picks' game state
+	 * is available.
+	 *
+	 * @returns {PlayerSelections}
+	 */
+	getPlayerSelections() : PlayerSelections {
+		let playerSelections = new PlayerSelections();
+
+		playerSelections.addSelection('ServerGameObject');
+		playerSelections.addSelection('ServerGameObject');
+
+		return playerSelections;
+	}
+
+	/**
+	 * @param clientId
+	 * @returns {Player|undefined}
+	 */
+	getPlayerByClientId(clientId) {
+		return this.gameState.players
+            .find(pl => pl.clientId === clientId);
 	}
 }
