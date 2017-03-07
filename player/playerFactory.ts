@@ -14,12 +14,11 @@ export class PlayerFactory {
         this.playerCount = 0;
 
         this.colors = Array<string>();
-        this.colors.push('blue');
-        this.colors.push('yellow');
+        this.colors.push('#ff69be');
+        this.colors.push('#e6a04d');
     }
 
     /**
-     *
      * @param clientId
      * @param playerSelections
      * @param updateGameState
