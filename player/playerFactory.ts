@@ -1,8 +1,10 @@
 "use strict";
 
-import {Player} from '../../gremmage/src/js/example-app/player';
-import {PlayerSelections} from "./playerSelections";
+import {Player} from '../../gremmage/src/js/example-app/player/player';
+import {PlayerSelections} from "../../gremmage/src/js/example-app/player/playerSelections";
 import {ServerGameObject} from "../game-objects/ServerGameObject";
+import HeroPortrait from '../../gremmage/src/js/example-app/ui/data/HeroPortrait';
+
 var uuid = require('uuid/v1');
 
 export class PlayerFactory {
@@ -45,7 +47,7 @@ export class PlayerFactory {
      * @param player
      * @param playerSelections
      */
-    protected createGameObjects(player, playerSelections: Array<string>)
+    protected createGameObjects(player, playerSelections: Array<HeroPortrait>)
     {
         let payload = Array<ServerGameObject>();
 

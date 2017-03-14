@@ -1,8 +1,8 @@
 import {Room} from "colyseus";
-import BattleState from "../states/battleState";
 import PicksState from "../states/picksState";
+import {SelectionLobbyStatus} from '../../gremmage/src/js/example-app/ui/picks/SelectionLobbyStatus';
 
-export class GameRoom extends Room<any> {
+export class PicksRoom extends Room<any> {
 	delta: number;
 
 	constructor(options) {
@@ -20,6 +20,12 @@ export class GameRoom extends Room<any> {
 	
 	onJoin(client) {
 		this.state.onJoin(client);
+
+		this.broadcast(this.state.toJSON());
+
+		if (this.state.status  == SelectionLobbyStatus.ACTIVE) {
+			this.begin();
+		}
 	}
 
 	onLeave(client) {
@@ -27,7 +33,6 @@ export class GameRoom extends Room<any> {
 	}
 	
 	onMessage(client, data) {
-		this.state.onMessage(client, data);
 	}
 
 	onDispose() {
@@ -36,5 +41,12 @@ export class GameRoom extends Room<any> {
 	
 	tick() {
 		this.state.update(this.delta);
+	}
+
+	begin() {
+		this.state.newPick();
+
+		this.send(this.state.activeClient, {status: SelectionLobbyStatus.PICKING})
+		this.send(this.state.waitingClient, {status: SelectionLobbyStatus.OPPONENT_PICKING})
 	}
 }

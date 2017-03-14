@@ -1,10 +1,11 @@
-import {Player} from '../../gremmage/src/js/example-app/player';
+import {Player} from '../../gremmage/src/js/example-app/player/player';
 import {ServerGameObject} from "../game-objects/ServerGameObject";
 import IGameState from "./IGameState";
 import {Client} from "colyseus";
 import MovementComponent from '../../gremmage/src/js/game-engine/movement-component';
 import {PlayerFactory} from "../player/playerFactory";
-import {PlayerSelections} from "../player/playerSelections";
+import {PlayerSelections} from '../../gremmage/src/js/example-app/player/playerSelections';
+import HeroPortrait from '../../gremmage/src/js/example-app/ui/data/HeroPortrait';
 
 export default class BattleState implements IGameState {
     players : Array<Player>;
@@ -37,7 +38,7 @@ export default class BattleState implements IGameState {
     }
 
     onJoin(client: Client) {
-        let player = this.playerFactory.make(client.id, this.getPlayerSelections());
+        let player = this.playerFactory.make(client.id, this.getPlayerSelections(client.id));
         this.addPlayerToState(player);
     }
 
@@ -65,11 +66,11 @@ export default class BattleState implements IGameState {
      *
      * @returns {PlayerSelections}
      */
-    getPlayerSelections() : PlayerSelections {
-        let playerSelections = new PlayerSelections();
+    getPlayerSelections(clientId) : PlayerSelections {
+        let playerSelections = new PlayerSelections(clientId);
 
-        playerSelections.addSelection('ServerGameObject');
-        playerSelections.addSelection('ServerGameObject');
+        playerSelections.addSelection(new HeroPortrait('test', 'test'));
+        playerSelections.addSelection(new HeroPortrait('test', 'test'));
 
         return playerSelections;
     }
