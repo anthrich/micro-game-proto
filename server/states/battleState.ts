@@ -1,11 +1,11 @@
-import {Player} from '../../gremmage/src/js/example-app/player/player';
+import {Player} from '../../client/js/player/player';
 import {ServerGameObject} from "../game-objects/ServerGameObject";
 import IGameState from "./IGameState";
 import {Client} from "colyseus";
-import MovementComponent from '../../gremmage/src/js/game-engine/movement-component';
+import MovementComponent from '../../game-engine/movement-component';
 import {PlayerFactory} from "../player/playerFactory";
-import {PlayerSelections} from '../../gremmage/src/js/example-app/player/playerSelections';
-import HeroPortrait from '../../gremmage/src/js/example-app/ui/data/HeroPortrait';
+import {PlayerSelectionsModel} from '../../client/js/ui/data/PlayerSelectionsModel';
+import HeroPortrait from '../../client/js/ui/data/HeroPortrait';
 
 export default class BattleState implements IGameState {
     players : Array<Player>;
@@ -66,11 +66,11 @@ export default class BattleState implements IGameState {
      *
      * @returns {PlayerSelections}
      */
-    getPlayerSelections(clientId) : PlayerSelections {
-        let playerSelections = new PlayerSelections(clientId);
+    getPlayerSelections(clientId) : PlayerSelectionsModel {
+        let playerSelections = new PlayerSelectionsModel(clientId);
 
-        playerSelections.addSelection(new HeroPortrait('test', 'test'));
-        playerSelections.addSelection(new HeroPortrait('test', 'test'));
+        playerSelections.addSelection(new HeroPortrait(1, 'test', 'test'));
+        playerSelections.addSelection(new HeroPortrait(2, 'test', 'test'));
 
         return playerSelections;
     }
