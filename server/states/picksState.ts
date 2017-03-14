@@ -1,9 +1,9 @@
 import IGameState from "./IGameState";
 import {Client} from "colyseus";
-import {SelectionLobbyStatus} from '../../gremmage/src/js/example-app/ui/picks/SelectionLobbyStatus';
-import {PlayerSelectionsModel} from '../../gremmage/src/js/example-app/ui/data/PlayerSelectionsModel';
-import HeroPortrait from '../../gremmage/src/js/example-app/ui/data/HeroPortrait'
-import Heroes from '../../gremmage/src/js/example-app/ui/data/heroes';
+import {SelectionLobbyStatus} from '../../client/js/ui/picks/SelectionLobbyStatus';
+import {PlayerSelectionsModel} from '../../client/js/ui/data/PlayerSelectionsModel';
+import HeroPortrait from '../../client/js/ui/data/HeroPortrait'
+import Heroes from '../../client/js/ui/data/heroes';
 
 export default class PicksState implements IGameState {
     clients : Array<Client>;

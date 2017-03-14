@@ -1,4 +1,6 @@
 node_modules
 npm-debug.log
-*.js
+client/js/**/*.js
+server/**/*.js
+game-engine/**/*.js
 .idea

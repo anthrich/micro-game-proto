@@ -1,9 +1,9 @@
 "use strict";
 
-import {Player} from '../../gremmage/src/js/example-app/player/player';
-import {PlayerSelections} from "../../gremmage/src/js/example-app/player/playerSelections";
+import {Player} from '../../client/js/player/player';
+import {PlayerSelectionsModel} from "../../client/js/ui/data/PlayerSelectionsModel";
 import {ServerGameObject} from "../game-objects/ServerGameObject";
-import HeroPortrait from '../../gremmage/src/js/example-app/ui/data/HeroPortrait';
+import HeroPortrait from '../../client/js/ui/data/HeroPortrait';
 
 var uuid = require('uuid/v1');
 
@@ -26,7 +26,7 @@ export class PlayerFactory {
      * @param updateGameState
      * @returns {Player}
      */
-    make(clientId : string, playerSelections : PlayerSelections) : Player
+    make(clientId : string, playerSelections : PlayerSelectionsModel) : Player
     {
         var player = new Player(this.playerCount, this.colors[this.playerCount], clientId);
 

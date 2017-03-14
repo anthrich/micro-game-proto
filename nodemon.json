@@ -1,9 +1,8 @@
 {
   "watch": [
-    "**/*.ts"
+    "server/**/*.ts"
   ],
   "ignore": [],
   "ext" : "ts",
-  "exec": "tsc && node --harmony --debug",
-  "script" : "index.js"
+  "exec": "tsc && node --harmony --debug ./server/index.js"
 }

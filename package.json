@@ -4,16 +4,42 @@
   "description": "Colyseus Server - Minimal example",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node --debug --harmony index.js"
+    "start-server": "nodemon",
+    "start-client": "webpack-dev-server --content-base client/",
+    "build": "webpack"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "colyseus": "^0.4.0",
     "dotenv": "^2.0.0",
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "@types/react": "^15.0.16",
+    "@types/react-dom": "^0.14.23",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
   },
   "devDependencies": {
-    "typescript": "^2.1.4"
+    "autoprefixer": "^6.3.6",
+    "babel-core": "^6.7.7",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.22.0",
+    "colors": "^1.1.0",
+    "colyseus.js": "^0.6.0",
+    "css-loader": "^0.23.1",
+    "csswring": "^4.2.2",
+    "doiuse": "^2.3.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "node-sass": "^4.5.0",
+    "postcss-cssnext": "^2.5.2",
+    "postcss-loader": "^0.8.2",
+    "postcss-nested": "^1.0.0",
+    "sass-loader": "^6.0.3",
+    "style-loader": "^0.13.1",
+    "ts-loader": "^2.0.0",
+    "typescript": "^2.1.5",
+    "webpack": "^1.8.11",
+    "webpack-dev-server": "^1.8.2",
+    "wordwrap": "1.0.0"
   }
 }

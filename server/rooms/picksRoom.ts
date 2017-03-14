@@ -1,6 +1,6 @@
 import {Room} from "colyseus";
 import PicksState from "../states/picksState";
-import {SelectionLobbyStatus} from '../../gremmage/src/js/example-app/ui/picks/SelectionLobbyStatus';
+import {SelectionLobbyStatus} from '../../client/js/ui/picks/SelectionLobbyStatus';
 
 export class PicksRoom extends Room<any> {
 	delta: number;

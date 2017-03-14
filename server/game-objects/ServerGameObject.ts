@@ -1,5 +1,5 @@
-import GameObject from '../../gremmage/src/js/game-engine/game-object';
-import MovementComponent from '../../gremmage/src/js/game-engine/movement-component';
+import GameObject from '../../game-engine/game-object';
+import MovementComponent from '../../game-engine/movement-component';
 
 export class ServerGameObject extends GameObject {
     playerId : number;

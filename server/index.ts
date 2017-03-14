@@ -20,6 +20,5 @@ const gameServer = new Server({ server: httpServer });
 gameServer.register("game_room", GameRoom);
 gameServer.register("picks_room", PicksRoom);
 
-
 httpServer.listen(port);
 console.log(`Listening on http://localhost:${ port }`);
