@@ -4,8 +4,8 @@ import IGameState from "./IGameState";
 import {Client} from "colyseus";
 import MovementComponent from '../../game-engine/movement-component';
 import {PlayerFactory} from "../player/playerFactory";
-import {PlayerSelectionsModel} from '../../client/js/ui/data/PlayerSelectionsModel';
-import HeroPortrait from '../../client/js/ui/data/HeroPortrait';
+import {PlayerSelectionsModel} from '../rooms/picks/PlayerSelectionsModel';
+import HeroPortrait from '../../client/js/ui/models/HeroPortrait';
 
 export default class BattleState implements IGameState {
     players : Array<Player>;

@@ -1,6 +1,6 @@
-import {PlayerSelectionsModel} from "../data/PlayerSelectionsModel";
-import HeroPortrait from "../data/HeroPortrait";
-import Heroes from '../data/heroes';
+import {PlayerSelectionsModel} from "../../../../server/rooms/picks/PlayerSelectionsModel";
+import HeroPortrait from "../models/HeroPortrait";
+import Heroes from '../../../../server/rooms/picks/heroes';
 import {SelectionLobbyStatus} from "./SelectionLobbyStatus";
 
 export  default class SelectionLobbyState {

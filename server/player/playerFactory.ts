@@ -1,9 +1,9 @@
 "use strict";
 
 import {Player} from '../../client/js/player/player';
-import {PlayerSelectionsModel} from "../../client/js/ui/data/PlayerSelectionsModel";
+import {PlayerSelectionsModel} from "../rooms/picks/PlayerSelectionsModel";
 import {ServerGameObject} from "../game-objects/ServerGameObject";
-import HeroPortrait from '../../client/js/ui/data/HeroPortrait';
+import HeroPortrait from '../../client/js/ui/models/HeroPortrait';
 
 var uuid = require('uuid/v1');
 

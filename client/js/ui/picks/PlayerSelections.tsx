@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {PlayerSelectionsInterface} from "./PlayerSelectionsInterface";
-import NullHeroPortrait from "../data/NullHeroPortrait";
+import NullHeroPortrait from "../models/NullHeroPortrait";
 
 export default class PlayerSelections extends React.Component<PlayerSelectionsInterface, any> {
     constructor(props,context) {

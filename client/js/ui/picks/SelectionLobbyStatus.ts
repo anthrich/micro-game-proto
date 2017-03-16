@@ -4,5 +4,6 @@ export enum SelectionLobbyStatus {
     ACTIVE,
     PAUSED,
     PICKING,
-    OPPONENT_PICKING
+    OPPONENT_PICKING,
+    PICKS_COMPLETE
 }

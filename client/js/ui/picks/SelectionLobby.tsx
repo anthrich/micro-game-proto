@@ -5,7 +5,7 @@ import AvailableSelections from "./AvailableSelections";
 import {SelectionLobbyInterface} from "./SelectionLobbyInterface";
 import LoadingOverlay from '../LoadingOverlay';
 import {SelectionLobbyStatus} from './SelectionLobbyStatus';
-import {PlayerSelectionsModel} from "../data/PlayerSelectionsModel";
+import {PlayerSelectionsModel} from "../../../../server/rooms/picks/PlayerSelectionsModel";
 
 export default class SelectionLobby extends React.Component<SelectionLobbyInterface, SelectionLobbyState> {
     constructor(props,context) {

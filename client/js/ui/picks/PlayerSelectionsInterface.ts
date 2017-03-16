@@ -1,4 +1,4 @@
-import {PlayerSelectionsModel} from "../data/PlayerSelectionsModel";
+import {PlayerSelectionsModel} from "../../../../server/rooms/picks/PlayerSelectionsModel";
 
 export interface PlayerSelectionsInterface {
     current_user : boolean;

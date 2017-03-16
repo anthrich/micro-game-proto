@@ -1,4 +1,4 @@
-import HeroPortrait from "./HeroPortrait";
+import HeroPortrait from "../../../client/js/ui/models/HeroPortrait";
 
 export class PlayerSelectionsModel {
     protected clientId:string;

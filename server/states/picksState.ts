@@ -1,33 +1,33 @@
 import IGameState from "./IGameState";
 import {Client} from "colyseus";
 import {SelectionLobbyStatus} from '../../client/js/ui/picks/SelectionLobbyStatus';
-import {PlayerSelectionsModel} from '../../client/js/ui/data/PlayerSelectionsModel';
-import HeroPortrait from '../../client/js/ui/data/HeroPortrait'
-import Heroes from '../../client/js/ui/data/heroes';
+import {PlayerSelectionsModel} from '../rooms/picks/PlayerSelectionsModel';
+import HeroPortrait from '../../client/js/ui/models/HeroPortrait'
+import Heroes from '../rooms/picks/heroes';
+import Turn from "../rooms/picks/Turn";
 
 export default class PicksState implements IGameState {
     clients : Array<Client>;
     status : number;
-    currentPick : number;
     pickOrder : Array<number>;
-    pickDuration: number;
-    activeClient : Client;
-    waitingClient : Client;
+    turns: Array<Turn>;
+    activeTurn : Turn;
     selections : Array<PlayerSelectionsModel>;
     available : Array<HeroPortrait>;
 
     constructor() {
         this.clients = Array<Client>();
+        this.turns = Array<Turn>();
         this.status = SelectionLobbyStatus.INIT;
-        this.currentPick = 0;
-        this.pickDuration = 3000;
         this.pickOrder = [0,1,1,0,1,0,1,0,1,0];
         this.selections = Array<PlayerSelectionsModel>();
         this.available = Heroes;
     }
 
     update(delta: number) {
- 
+        if(this.activeTurn == undefined) return;
+
+        this.activeTurn.update(delta);
     }
 
     onMessage(client: Client, data) {
@@ -35,42 +35,51 @@ export default class PicksState implements IGameState {
     }
 
     onJoin(client: Client) {
-        this.clients.push(client);
+        if(this.clients.length >= 2) return;
 
+        this.clients.push(client);
         this.selections.push(new PlayerSelectionsModel(client.id));
 
-        if(this.clients.length == 2) {
-            this.status = SelectionLobbyStatus.ACTIVE;
-            return;
-        }
-
-        this.status = SelectionLobbyStatus.WAITING;
+        this.init();
     }
 
     onLeave(client) {
         console.log(client + "dropped");
     }
 
-    newPick() {
-        this.assignClients();
+    init() {
+        if(this.clients.length == 1) {
+            this.status = SelectionLobbyStatus.WAITING;
+            return;
+        }
 
-        //start timer?
+        this.pickOrder.forEach((index, pos) => {
+            let client = this.clients[index];
+            let other = this.otherClient(client);
 
-        this.currentPick ++;
+            this.turns.push(new Turn(pos, client, other));
+        });
+
+        this.status = SelectionLobbyStatus.ACTIVE;
     }
 
-    assignClients() {
-        let pickId = this.pickOrder[this.currentPick];
+    startTurn(pos) {
+        let turn = this.turns.find(t => t.pos == pos);
 
-        this.clients.forEach((c,index) => {
-            if(index == pickId) {
-                this.activeClient = this.clients[index];
-            } else {
-                this.waitingClient = this.clients[index];
-            }
-        })
+        if(turn) {
+            this.activeTurn = turn;
+            this.activeTurn.begin();
+        } else {
+            this.status = SelectionLobbyStatus.PICKS_COMPLETE;
+        }
+    }
 
-        return this.clients[pickId];
+    otherClient(client) {
+        if(client.id == this.clients[0].id) {
+            return this.clients[1];
+        } else {
+            return this.clients[0];
+        }
     }
 
     toJSON() {

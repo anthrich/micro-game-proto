@@ -1,4 +1,4 @@
-import HeroPortrait from './HeroPortrait';
+import HeroPortrait from '../../../client/js/ui/models/HeroPortrait';
 
 export default [
     new HeroPortrait(1, "Rifleman", "http://lorempixel.com/200/100/people/7"),

@@ -1,6 +1,7 @@
 import {Room} from "colyseus";
 import PicksState from "../states/picksState";
 import {SelectionLobbyStatus} from '../../client/js/ui/picks/SelectionLobbyStatus';
+import {TurnStatus} from "./picks/Turn";
 
 export class PicksRoom extends Room<any> {
 	delta: number;
@@ -24,7 +25,7 @@ export class PicksRoom extends Room<any> {
 		this.broadcast(this.state.toJSON());
 
 		if (this.state.status  == SelectionLobbyStatus.ACTIVE) {
-			this.begin();
+			this.startTurn(0);
 		}
 	}
 
@@ -40,13 +41,28 @@ export class PicksRoom extends Room<any> {
 	}
 	
 	tick() {
+		if(this.state.status == SelectionLobbyStatus.PICKS_COMPLETE)
+			return;
+
+		if(this.haveTurn() && this.turnComplete()) {
+			this.startTurn(this.state.activeTurn.next());
+		}
+
 		this.state.update(this.delta);
 	}
 
-	begin() {
-		this.state.newPick();
+	startTurn(turn) {
+		this.state.startTurn(turn);
 
-		this.send(this.state.activeClient, {status: SelectionLobbyStatus.PICKING})
-		this.send(this.state.waitingClient, {status: SelectionLobbyStatus.OPPONENT_PICKING})
+		this.send(this.state.activeTurn.activeClient, {status: SelectionLobbyStatus.PICKING})
+		this.send(this.state.activeTurn.waitingClient, {status: SelectionLobbyStatus.OPPONENT_PICKING})
+	}
+
+	haveTurn() {
+		return <boolean><Boolean> this.state.activeTurn;
+	}
+
+	turnComplete() {
+		return this.state.activeTurn.status == TurnStatus.COMPLETE;
 	}
 }

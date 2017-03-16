@@ -1,4 +1,4 @@
-import HeroPortrait from "../data/HeroPortrait";
+import HeroPortrait from "../models/HeroPortrait";
 
 export interface AvailableSelectionsInterface {
     heroes : Array<HeroPortrait>,
