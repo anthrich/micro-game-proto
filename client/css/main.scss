@@ -171,6 +171,22 @@ body {
   .shimmer {
     animation: minor_pulse 1s alternate infinite ease-in-out;
   }
+
+  #selection-lobby {
+    header {
+      background: rgba(0, 0, 0, 0.3);
+      position: fixed;
+      bottom: 0;
+      overflow: auto;
+      width: 100%;
+      padding: 20px 0px;
+
+      .header-clock {
+        width: 1em;
+        margin: 0 auto;
+      }
+    }
+  }
 }
 #canvas {
   display: block;

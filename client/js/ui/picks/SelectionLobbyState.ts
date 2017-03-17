@@ -10,6 +10,8 @@ export  default class SelectionLobbyState {
     overlayMessage : string;
     showOverlay : boolean;
     status : number;
+    turnTime : number;
+    turnElapsed : number;
 
     constructor() {
         this.available = Heroes;
@@ -17,5 +19,7 @@ export  default class SelectionLobbyState {
         this.overlayMessage = 'Connecting to server';
         this.showOverlay = true;
         this.status = SelectionLobbyStatus.INIT;
+        this.turnElapsed = 0;
+        this.turnTime = 0;
     }
 }

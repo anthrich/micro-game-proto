@@ -86,7 +86,8 @@ export default class PicksState implements IGameState {
         return {
             status : this.status,
             selections : this.selections,
-            available : this.available
+            available : this.available,
+            activeTurn : this.activeTurn
         }
     }
 }

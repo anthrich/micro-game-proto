@@ -6,6 +6,7 @@ import {SelectionLobbyInterface} from "./SelectionLobbyInterface";
 import LoadingOverlay from '../LoadingOverlay';
 import {SelectionLobbyStatus} from './SelectionLobbyStatus';
 import {PlayerSelectionsModel} from "../../../../server/rooms/picks/PlayerSelectionsModel";
+import CountdownClock from "./../CountdownClock";
 
 export default class SelectionLobby extends React.Component<SelectionLobbyInterface, SelectionLobbyState> {
     constructor(props,context) {
@@ -20,7 +21,7 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
             this.setState({
                 clientId : client.id,
                 status : SelectionLobbyStatus.WAITING,
-                overlayMessage : 'Waiting for player 2'
+                overlayMessage : 'Waiting for player 2',
             });
         })
 
@@ -49,7 +50,12 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         })
 
         room.onUpdate.add((serverState) => {
-
+            if(serverState.activeTurn != null) {
+                this.setState({
+                    turnTime : serverState.activeTurn.duration,
+                    turnElapsed : serverState.activeTurn.elapsed
+                });
+            }
         });
     }
 
@@ -71,6 +77,13 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
     renderPicks() {
         return (
             <div id="selection-lobby">
+                <header>
+                    <div className="header-clock">
+                        <CountdownClock initialTime={this.state.turnTime}
+                                        elapsedTime={this.state.turnElapsed}/>
+                    </div>
+                </header>
+
                 <PlayerSelections selections={this.getSelectionsForCurrent()}
                                   current_user={true} />
 

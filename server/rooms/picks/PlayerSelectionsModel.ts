@@ -5,12 +5,10 @@ export class PlayerSelectionsModel {
     protected selections : Array<HeroPortrait>;
     protected maxSelections: number;
 
-
     constructor(clientId) {
         this.clientId = clientId;
         this.selections = [];
         this.maxSelections = 5;
-
     }
 
     addSelection(selection : HeroPortrait) {
