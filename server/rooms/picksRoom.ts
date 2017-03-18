@@ -16,7 +16,7 @@ export class PicksRoom extends Room<any> {
 	}
 	
 	requestJoin(options) {
-		return this.clients.length <= 2;
+		return this.clients.length < 2;
 	}
 	
 	onJoin(client) {
@@ -37,7 +37,7 @@ export class PicksRoom extends Room<any> {
 	}
 
 	onDispose() {
-		console.log("Dispose ChatRoom");
+		this.state.reset();
 	}
 	
 	tick() {
@@ -45,6 +45,7 @@ export class PicksRoom extends Room<any> {
 			return;
 
 		if(this.haveTurn() && this.turnComplete()) {
+			this.sendSelections();
 			this.startTurn(this.state.activeTurn.next());
 		}
 
@@ -53,9 +54,16 @@ export class PicksRoom extends Room<any> {
 
 	startTurn(turn) {
 		this.state.startTurn(turn);
+		this.sendPickState();
+	}
 
+	sendPickState() {
 		this.send(this.state.activeTurn.activeClient, {status: SelectionLobbyStatus.PICKING})
 		this.send(this.state.activeTurn.waitingClient, {status: SelectionLobbyStatus.OPPONENT_PICKING})
+	}
+
+	sendSelections() {
+		this.broadcast(this.state.toJSON());
 	}
 
 	haveTurn() {
@@ -63,6 +71,7 @@ export class PicksRoom extends Room<any> {
 	}
 
 	turnComplete() {
-		return this.state.activeTurn.status == TurnStatus.COMPLETE;
+		let activeStatus = this.state.activeTurn.status;
+		return activeStatus == TurnStatus.COMPLETE || activeStatus == TurnStatus.OUT_OF_TIME;
 	}
 }

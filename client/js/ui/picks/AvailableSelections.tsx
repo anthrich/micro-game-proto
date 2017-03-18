@@ -31,12 +31,18 @@ export default class AvailableSelections extends React.Component<AvailableSelect
             className = 'inactive';
         }
 
-        return this.props.heroes.map((a, index) => (
-            <li key={index} className={className}>
-                <img src={a.url}/>
-                <span>{a.name}</span>
-            </li>
-        ));
+        return this.props.heroes.map((a, index) => {
+            let avail;
+            if(a.available == false ) avail = 'inactive';
+
+            return (
+                <li key={index} className={className + ' ' + avail}>
+                    <img src={a.url}/>
+                    <span>{a.name}</span>
+                </li>
+            );
+        });
+
     }
 
     titleJSX() {

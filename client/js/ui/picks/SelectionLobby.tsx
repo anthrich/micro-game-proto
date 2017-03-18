@@ -5,8 +5,8 @@ import AvailableSelections from "./AvailableSelections";
 import {SelectionLobbyInterface} from "./SelectionLobbyInterface";
 import LoadingOverlay from '../LoadingOverlay';
 import {SelectionLobbyStatus} from './SelectionLobbyStatus';
-import {PlayerSelectionsModel} from "../../../../server/rooms/picks/PlayerSelectionsModel";
 import CountdownClock from "./../CountdownClock";
+import UiPlayerSelectionsModel from "../models/UiPlayerSelectionsModel";
 
 export default class SelectionLobby extends React.Component<SelectionLobbyInterface, SelectionLobbyState> {
     constructor(props,context) {
@@ -26,28 +26,26 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         })
 
         room.onData.add((data) => {
-            if(data.status == SelectionLobbyStatus.ACTIVE) {
-                this.setState((previousState) => {
-                    data.selections.forEach((s) => {
-                        let exists = previousState.selections.find(e => e.getClientId() == s.clientId);
-
-                        if(!exists)
-                            previousState.selections.push(new PlayerSelectionsModel(s.clientId));
-
-                        previousState.available = data.available;
-                        previousState.showOverlay = data.false;
-                        previousState.status = data.status;
-                    });
-
-                    return previousState;
-                });
-            }
-
             if(data.status == SelectionLobbyStatus.PICKING ||
                 data.status == SelectionLobbyStatus.OPPONENT_PICKING) {
                 this.setState({status : data.status});
             }
-        })
+
+            if(data.status != SelectionLobbyStatus.ACTIVE)
+                return;
+
+            this.setState((previousState) => {
+                data.selections.forEach((s) => {
+                    this.updateSelections(previousState, s);
+                    previousState.available = data.available;
+                    previousState.showOverlay = data.false;
+                    previousState.status = data.status;
+                });
+
+                return previousState;
+            });
+
+        });
 
         room.onUpdate.add((serverState) => {
             if(serverState.activeTurn != null) {
@@ -108,5 +106,15 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         return this.state.selections.find(
             s => s.getClientId() != this.state.clientId
         );
+    }
+
+    updateSelections(previousState, selectionObj) {
+        let exists = previousState.selections.find(e => e.getClientId() == selectionObj.clientId);
+
+        if(!exists) {
+            previousState.selections.push(new UiPlayerSelectionsModel(selectionObj.clientId));
+        } else {
+            exists.sync(selectionObj.selections);
+        }
     }
 }

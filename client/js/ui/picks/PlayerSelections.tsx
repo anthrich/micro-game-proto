@@ -5,12 +5,6 @@ import NullHeroPortrait from "../models/NullHeroPortrait";
 export default class PlayerSelections extends React.Component<PlayerSelectionsInterface, any> {
     constructor(props,context) {
         super(props,context);
-
-        this.state = {
-            portraits : []
-        };
-
-        this.populatePortraits();
     }
 
     render () {
@@ -31,24 +25,8 @@ export default class PlayerSelections extends React.Component<PlayerSelectionsIn
         return this.props.selections.getSelections();
     }
 
-    getMaxSelections() {
-        return this.props.selections.getMaxSelections();
-    }
-
-    populatePortraits() {
-        let playerSelections = this.getSelections();
-
-        for(let a = 0; a < this.getMaxSelections(); a++) {
-            if(typeof(playerSelections[a]) != "undefined") {
-                this.state.portraits.push(playerSelections[a]);
-            } else {
-                this.state.portraits.push(new NullHeroPortrait());
-            }
-        }
-    }
-
     listItemsJSX() {
-        return this.state.portraits.map((p, index) => {
+        return this.getSelections().map((p, index) => {
             let jsx;
 
             if(p instanceof NullHeroPortrait) {

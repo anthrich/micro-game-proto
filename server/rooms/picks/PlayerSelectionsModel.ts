@@ -1,8 +1,9 @@
 import HeroPortrait from "../../../client/js/ui/models/HeroPortrait";
+import {HeroPortraitInterface} from "../../../client/js/ui/models/HeroPortrait";
 
 export class PlayerSelectionsModel {
     protected clientId:string;
-    protected selections : Array<HeroPortrait>;
+    protected selections : Array<HeroPortraitInterface>;
     protected maxSelections: number;
 
     constructor(clientId) {
@@ -11,7 +12,7 @@ export class PlayerSelectionsModel {
         this.maxSelections = 5;
     }
 
-    addSelection(selection : HeroPortrait) {
+    addSelection(selection : HeroPortraitInterface) {
         if(this.selections.length >= this.maxSelections) {
             throw new Error('A player cannot have more than ' + this.maxSelections + ' selections');
         }

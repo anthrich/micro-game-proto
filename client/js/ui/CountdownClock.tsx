@@ -27,6 +27,10 @@ export default class CountdownClock extends React.Component<CountdownClockInterf
         let elapsed = (newProps.elapsedTime > 0 ? newProps.elapsedTime : 0);
         let remaining = newProps.initialTime - elapsed;
 
+        if(remaining <= 0) {
+            active = false;
+        }
+
         this.setState({
             active : active,
             initialTime : newProps.initialTime,
