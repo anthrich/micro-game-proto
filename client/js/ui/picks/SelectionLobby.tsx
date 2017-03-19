@@ -7,17 +7,20 @@ import LoadingOverlay from '../LoadingOverlay';
 import {SelectionLobbyStatus} from './SelectionLobbyStatus';
 import CountdownClock from "./../CountdownClock";
 import UiPlayerSelectionsModel from "../models/UiPlayerSelectionsModel";
+import {Room} from "colyseus.js";
 
 export default class SelectionLobby extends React.Component<SelectionLobbyInterface, SelectionLobbyState> {
+    room : Room<any>;
+
     constructor(props,context) {
         super(props,context);
 
         this.state = new SelectionLobbyState();
 
-        let room = this.props.colyseus.room;
+        this.room = this.props.colyseus.room;
         let client = this.props.colyseus.client;
 
-        room.onJoin.add(() => {
+        this.room.onJoin.add(() => {
             this.setState({
                 clientId : client.id,
                 status : SelectionLobbyStatus.WAITING,
@@ -25,7 +28,7 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
             });
         })
 
-        room.onData.add((data) => {
+        this.room.onData.add((data) => {
             if(data.status == SelectionLobbyStatus.PICKING ||
                 data.status == SelectionLobbyStatus.OPPONENT_PICKING) {
                 this.setState({status : data.status});
@@ -47,7 +50,7 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
 
         });
 
-        room.onUpdate.add((serverState) => {
+        this.room.onUpdate.add((serverState) => {
             if(serverState.activeTurn != null) {
                 this.setState({
                     turnTime : serverState.activeTurn.duration,
@@ -87,7 +90,8 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
 
                 <div id="main" className="panel">
                     <AvailableSelections heroes={this.state.available}
-                                         status={this.state.status} />
+                                         status={this.state.status}
+                                         onSelect={this.handleSelectHero} />
                 </div>
 
                 <PlayerSelections selections={this.getSelectionsForOther()}
@@ -116,5 +120,12 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         } else {
             exists.sync(selectionObj.selections);
         }
+    }
+
+    handleSelectHero = (selection) => {
+        this.room.send({
+            'message' : 'client_selection',
+            'selection' : selection
+        })
     }
 }

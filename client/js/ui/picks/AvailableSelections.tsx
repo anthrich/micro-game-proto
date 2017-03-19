@@ -33,10 +33,14 @@ export default class AvailableSelections extends React.Component<AvailableSelect
 
         return this.props.heroes.map((a, index) => {
             let avail;
+            let handler = this.onSelect.bind(this, a);
+
             if(a.available == false ) avail = 'inactive';
 
             return (
-                <li key={index} className={className + ' ' + avail}>
+                <li onClick={handler}
+                    key={index}
+                    className={className + ' ' + avail}>
                     <img src={a.url}/>
                     <span>{a.name}</span>
                 </li>
@@ -58,5 +62,14 @@ export default class AvailableSelections extends React.Component<AvailableSelect
         }
 
         return <h2 className={className}>{text}</h2>;
+    }
+
+    onSelect(selection, e) {
+        e.preventDefault();
+
+        if(selection.available == false)
+            return ;
+
+        this.props.onSelect(selection);
     }
 }

@@ -34,6 +34,12 @@ export class PicksRoom extends Room<any> {
 	}
 	
 	onMessage(client, data) {
+		if(client != this.state.activeTurn.activeClient)
+			return;
+
+		if(data.message = 'client_selection') {
+			this.handleSelection(client, data);
+		}
 	}
 
 	onDispose() {
@@ -73,5 +79,15 @@ export class PicksRoom extends Room<any> {
 	turnComplete() {
 		let activeStatus = this.state.activeTurn.status;
 		return activeStatus == TurnStatus.COMPLETE || activeStatus == TurnStatus.OUT_OF_TIME;
+	}
+
+	handleSelection(client, data) {
+		let selection = this.state.getSelection(data.selection.id);
+
+		if(selection.available == false)
+			return;
+
+		this.state.addSelection(client, selection);
+		this.state.activeTurn.complete();
 	}
 }

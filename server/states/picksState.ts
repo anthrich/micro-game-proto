@@ -64,7 +64,7 @@ export default class PicksState implements IGameState {
         this.status = SelectionLobbyStatus.ACTIVE;
     }
 
-    makeTurn(pos : number, client : Client, other : Client) {
+    makeTurn(pos : number, client : Client, other : Client) : Turn {
         let turn = new Turn(pos, client, other);
         turn.doOnComplete(this.turnComplete);
 
@@ -85,6 +85,7 @@ export default class PicksState implements IGameState {
             this.activeTurn.begin();
         } else {
             this.status = SelectionLobbyStatus.PICKS_COMPLETE;
+            console.log(this.status);
         }
     }
 
@@ -95,13 +96,12 @@ export default class PicksState implements IGameState {
 
         if(!selection) return;
 
-        this.selections.find(s => s.getClientId() == client.id)
-            .addSelection(selection);
+        this.addSelection(client, selection);
 
         selection.available = false;
     }
 
-    otherClient(client) {
+    otherClient(client) : Client {
         if(client.id == this.clients[0].id) {
             return this.clients[1];
         } else {
@@ -117,12 +117,23 @@ export default class PicksState implements IGameState {
         this.available = Heroes.get();
     }
 
-    toJSON() {
+    toJSON() : {} {
         return {
             status : this.status,
             selections : this.selections,
             available : this.available,
             activeTurn : this.activeTurn
         }
+    }
+
+    addSelection(client : Client, selection : HeroPortrait) {
+        this.selections.find(s => s.getClientId() == client.id)
+            .addSelection(selection);
+
+        selection.available = false;
+    }
+
+    getSelection(id) : HeroPortrait {
+        return this.available.find(s => s.id == id);
     }
 }
