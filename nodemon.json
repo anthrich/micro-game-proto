@@ -4,5 +4,5 @@
   ],
   "ignore": [],
   "ext" : "ts",
-  "exec": "tsc && node --harmony --debug ./server/index.js"
+  "exec": "tsc --sourceMap && node --harmony --debug ./server/index.js"
 }
