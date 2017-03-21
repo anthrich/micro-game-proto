@@ -35,7 +35,7 @@ export default class AvailableSelections extends React.Component<AvailableSelect
             let avail;
             let handler = this.onSelect.bind(this, a);
 
-            if(a.available == false ) avail = 'inactive';
+            if(a.available == false) avail = 'inactive';
 
             return (
                 <li onClick={handler}

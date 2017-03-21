@@ -29,25 +29,11 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         })
 
         this.room.onData.add((data) => {
-            if(data.status == SelectionLobbyStatus.PICKING ||
-                data.status == SelectionLobbyStatus.OPPONENT_PICKING) {
-                this.setState({status : data.status});
-            }
+            if(this.isPickingState(data.status))
+                this.handlePicksMessage(data);
 
-            if(data.status != SelectionLobbyStatus.ACTIVE)
-                return;
-
-            this.setState((previousState) => {
-                data.selections.forEach((s) => {
-                    this.updateSelections(previousState, s);
-                    previousState.available = data.available;
-                    previousState.showOverlay = data.false;
-                    previousState.status = data.status;
-                });
-
-                return previousState;
-            });
-
+            if(data.status == SelectionLobbyStatus.ACTIVE)
+                this.handleActiveMessage(data);
         });
 
         this.room.onUpdate.add((serverState) => {
@@ -61,8 +47,7 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
     }
 
     render () {
-        if(this.state.status == SelectionLobbyStatus.INIT ||
-            this.state.status == SelectionLobbyStatus.WAITING) {
+        if(this.isLoadingState(this.state.status)) {
             return this.renderNotice();
         }
 
@@ -112,6 +97,32 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         );
     }
 
+    handlePicksMessage(data) {
+        this.setState((previousState) => {
+            previousState.status = data.status;
+
+            if(data.status  == SelectionLobbyStatus.PICKS_COMPLETE) {
+                previousState.overlayMessage = 'Loading game, please wait';
+                previousState.showOverlay = true;
+            }
+
+            return previousState;
+        });
+    }
+
+    handleActiveMessage(data) {
+        this.setState((previousState) => {
+            data.selections.forEach((s) => {
+                this.updateSelections(previousState, s);
+                previousState.available = data.available;
+                previousState.showOverlay = data.false;
+                previousState.status = data.status;
+            });
+
+            return previousState;
+        });
+    }
+
     updateSelections(previousState, selectionObj) {
         let exists = previousState.selections.find(e => e.getClientId() == selectionObj.clientId);
 
@@ -127,5 +138,17 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
             'message' : 'client_selection',
             'selection' : selection
         })
+    }
+
+    isLoadingState(status : number) {
+        return status == SelectionLobbyStatus.INIT ||
+            status == SelectionLobbyStatus.WAITING ||
+            status == SelectionLobbyStatus.PICKS_COMPLETE;
+    }
+
+    isPickingState(status : number) {
+        return status == SelectionLobbyStatus.PICKING ||
+        status == SelectionLobbyStatus.OPPONENT_PICKING ||
+        status == SelectionLobbyStatus.PICKS_COMPLETE
     }
 }

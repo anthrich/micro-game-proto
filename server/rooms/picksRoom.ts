@@ -47,8 +47,10 @@ export class PicksRoom extends Room<any> {
 	}
 	
 	tick() {
-		if(this.state.status == SelectionLobbyStatus.PICKS_COMPLETE)
+		if(this.state.status == SelectionLobbyStatus.PICKS_COMPLETE) {
+			this.broadcast({status: this.state.status});
 			return;
+		}
 
 		if(this.haveTurn() && this.turnComplete()) {
 			this.sendSelections();
@@ -84,7 +86,7 @@ export class PicksRoom extends Room<any> {
 	handleSelection(client, data) {
 		let selection = this.state.getSelection(data.selection.id);
 
-		if(selection.available == false)
+		if(selection.available == false || this.state.activeTurn.activeClient != client)
 			return;
 
 		this.state.addSelection(client, selection);
