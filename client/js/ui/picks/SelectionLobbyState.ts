@@ -13,6 +13,7 @@ export  default class SelectionLobbyState {
     status : number;
     turnTime : number;
     turnElapsed : number;
+    isActiveClient : boolean;
 
     constructor() {
         this.available = Heroes.get();
@@ -22,5 +23,6 @@ export  default class SelectionLobbyState {
         this.status = SelectionLobbyStatus.INIT;
         this.turnElapsed = 0;
         this.turnTime = 0;
+        this.isActiveClient = false;
     }
 }

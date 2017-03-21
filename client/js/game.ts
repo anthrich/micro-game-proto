@@ -24,7 +24,6 @@ class ExampleGameState extends GameState {
     this.players = Array<Player>();
 
     this.room.onUpdate.add(function(state) {
-      console.log(state);
       state.gameObjects.forEach(newGo => {
         let currentGo = self.gameObjects.find(eGo => eGo.id === newGo.id);
         if(!currentGo) currentGo = addNewGameObject(newGo);

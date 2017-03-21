@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 export interface LoadingOverlayInterface {
-    show : boolean;
     message : string;
 }
 
@@ -11,9 +10,6 @@ export default class LoadingOverlay extends React.Component<LoadingOverlayInterf
     }
 
     render () {
-        if(!this.props.show)
-            return null;
-
         return (
             <div className="status-overlay">
                 <div className="loader">

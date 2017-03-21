@@ -22,28 +22,36 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
 
         this.room.onJoin.add(() => {
             this.setState({
-                clientId : client.id,
-                status : SelectionLobbyStatus.WAITING,
-                overlayMessage : 'Waiting for player 2',
+                clientId : client.id
             });
-        })
-
-        this.room.onData.add((data) => {
-            if(this.isPickingState(data.status))
-                this.handlePicksMessage(data);
-
-            if(data.status == SelectionLobbyStatus.ACTIVE)
-                this.handleActiveMessage(data);
         });
 
         this.room.onUpdate.add((serverState) => {
-            if(serverState.activeTurn != null) {
-                this.setState({
-                    turnTime : serverState.activeTurn.duration,
-                    turnElapsed : serverState.activeTurn.elapsed
+            this.setState((prevState) => {
+                serverState.selections.forEach((s) => {
+                    this.updateSelections(prevState, s);
+                    prevState.available = serverState.available;
+                    prevState.status = serverState.status;
+                    prevState.isActiveClient = serverState.activeTurn &&
+                        serverState.activeTurn.activeClient.id == prevState.clientId;
+                    if(serverState.activeTurn) {
+                        prevState.turnTime = serverState.activeTurn.duration;
+                        prevState.turnElapsed = serverState.activeTurn.elapsed;
+                    }
                 });
-            }
+                return prevState;
+            });
         });
+    }
+    
+    updateSelections(previousState, selectionObj) {
+        let exists = previousState.selections.find(e => e.getClientId() == selectionObj.clientId);
+        
+        if(!exists) {
+            previousState.selections.push(new UiPlayerSelectionsModel(selectionObj.clientId));
+        } else {
+            exists.sync(selectionObj.selections);
+        }
     }
 
     render () {
@@ -56,7 +64,7 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
 
     renderNotice() {
         return (
-            <LoadingOverlay show={this.state.showOverlay} message={this.state.overlayMessage}/>
+            <LoadingOverlay message={this.state.overlayMessage}/>
         );
     }
 
@@ -75,7 +83,7 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
 
                 <div id="main" className="panel">
                     <AvailableSelections heroes={this.state.available}
-                                         status={this.state.status}
+                                         isActive={this.state.isActiveClient}
                                          onSelect={this.handleSelectHero} />
                 </div>
 
@@ -97,42 +105,6 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         );
     }
 
-    handlePicksMessage(data) {
-        this.setState((previousState) => {
-            previousState.status = data.status;
-
-            if(data.status  == SelectionLobbyStatus.PICKS_COMPLETE) {
-                previousState.overlayMessage = 'Loading game, please wait';
-                previousState.showOverlay = true;
-            }
-
-            return previousState;
-        });
-    }
-
-    handleActiveMessage(data) {
-        this.setState((previousState) => {
-            data.selections.forEach((s) => {
-                this.updateSelections(previousState, s);
-                previousState.available = data.available;
-                previousState.showOverlay = data.false;
-                previousState.status = data.status;
-            });
-
-            return previousState;
-        });
-    }
-
-    updateSelections(previousState, selectionObj) {
-        let exists = previousState.selections.find(e => e.getClientId() == selectionObj.clientId);
-
-        if(!exists) {
-            previousState.selections.push(new UiPlayerSelectionsModel(selectionObj.clientId));
-        } else {
-            exists.sync(selectionObj.selections);
-        }
-    }
-
     handleSelectHero = (selection) => {
         this.room.send({
             'message' : 'client_selection',
@@ -144,11 +116,5 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         return status == SelectionLobbyStatus.INIT ||
             status == SelectionLobbyStatus.WAITING ||
             status == SelectionLobbyStatus.PICKS_COMPLETE;
-    }
-
-    isPickingState(status : number) {
-        return status == SelectionLobbyStatus.PICKING ||
-        status == SelectionLobbyStatus.OPPONENT_PICKING ||
-        status == SelectionLobbyStatus.PICKS_COMPLETE
     }
 }

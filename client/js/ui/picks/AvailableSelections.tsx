@@ -27,7 +27,7 @@ export default class AvailableSelections extends React.Component<AvailableSelect
     heroListJSX() {
         let className = '';
 
-        if(this.props.status != SelectionLobbyStatus.PICKING) {
+        if(!this.props.isActive) {
             className = 'inactive';
         }
 
@@ -53,7 +53,7 @@ export default class AvailableSelections extends React.Component<AvailableSelect
         let text;
         let className;
 
-        if(this.props.status != SelectionLobbyStatus.PICKING) {
+        if(!this.props.isActive) {
             text = "Your opponent is picking";
             className="";
         } else {

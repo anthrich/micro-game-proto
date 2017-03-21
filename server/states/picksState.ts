@@ -23,12 +23,20 @@ export default class PicksState implements IGameState {
         this.pickOrder = [0,1,1,0,1,0,1,0,1,0];
         this.selections = Array<PlayerSelectionsModel>();
         this.available = Heroes.get();
-        this.turnComplete = this.turnComplete.bind(this);
+        this.completeTurn = this.completeTurn.bind(this);
     }
 
     update(delta: number) {
+        if(this.status == SelectionLobbyStatus.PICKS_COMPLETE) {
+            return;
+        }
+    
         if(this.activeTurn == undefined) return;
-
+        
+        if(this.isCompleteTurn()) {
+            this.startTurn(this.activeTurn.next());
+        }
+        
         this.activeTurn.update(delta);
     }
 
@@ -62,19 +70,25 @@ export default class PicksState implements IGameState {
         });
 
         this.status = SelectionLobbyStatus.ACTIVE;
+        this.startTurn(0);
     }
 
     makeTurn(pos : number, client : Client, other : Client) : Turn {
         let turn = new Turn(pos, client, other);
-        turn.doOnComplete(this.turnComplete);
+        turn.doOnComplete(this.completeTurn);
 
         return turn;
     }
 
-    turnComplete(turn : Turn) {
+    completeTurn(turn : Turn) {
         if(turn.status == TurnStatus.OUT_OF_TIME) {
             this.selectRandom(turn.activeClient);
         }
+    }
+    
+    isCompleteTurn() {
+        return this.activeTurn.status == TurnStatus.COMPLETE
+            || this.activeTurn.status == TurnStatus.OUT_OF_TIME;
     }
 
     startTurn(pos) {
@@ -135,5 +149,15 @@ export default class PicksState implements IGameState {
 
     getSelection(id) : HeroPortrait {
         return this.available.find(s => s.id == id);
+    }
+    
+    handleSelection(client, data) {
+        let selection = this.getSelection(data.selection.id);
+        
+        if(selection.available == false || this.activeTurn.activeClient != client)
+            return;
+        
+        this.addSelection(client, selection);
+        this.activeTurn.complete();
     }
 }
