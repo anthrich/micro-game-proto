@@ -20,7 +20,7 @@ export default class Turn {
         this.pos = pos;
         this.activeClient = client;
         this.waitingClient = otherClient;
-        this.duration = 4000;
+        this.duration = 400;
         this.elapsed = 0;
         this.status = TurnStatus.PENDING;
     }
@@ -67,5 +67,14 @@ export default class Turn {
 
     doOnComplete(cb : Function) {
         this.completeCb = cb;
+    }
+
+    toJSON() {
+        return {
+            duration : this.duration,
+            elapsed : this.elapsed,
+            activeClient : this.activeClient,
+            waitingClient: this.waitingClient
+        };
     }
 }

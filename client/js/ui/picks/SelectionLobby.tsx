@@ -16,7 +16,6 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         super(props,context);
 
         this.state = new SelectionLobbyState();
-
         this.room = this.props.colyseus.room;
         let client = this.props.colyseus.client;
 
@@ -27,6 +26,7 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
         });
 
         this.room.onUpdate.add((serverState) => {
+            console.log(serverState);
             this.setState((prevState) => {
                 serverState.selections.forEach((s) => {
                     this.updateSelections(prevState, s);
@@ -63,8 +63,24 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
     }
 
     renderNotice() {
+        let notice;
+
+        switch (this.state.status) {
+            case SelectionLobbyStatus.WAITING:
+                notice = 'Waiting for player 2';
+                break;
+            case SelectionLobbyStatus.PAUSED:
+                notice = 'Game paused. Please wait.';
+                break;
+            case SelectionLobbyStatus.PICKS_COMPLETE:
+                notice = 'Loading game innit';
+                break;
+            default:
+                notice = '';
+        }
+
         return (
-            <LoadingOverlay message={this.state.overlayMessage}/>
+            <LoadingOverlay message={notice}/>
         );
     }
 

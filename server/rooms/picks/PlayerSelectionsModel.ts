@@ -1,4 +1,3 @@
-import HeroPortrait from "../../../client/js/ui/models/HeroPortrait";
 import {HeroPortraitInterface} from "../../../client/js/ui/models/HeroPortrait";
 
 export class PlayerSelectionsModel {

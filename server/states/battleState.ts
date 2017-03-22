@@ -5,17 +5,20 @@ import {Client} from "colyseus";
 import MovementComponent from '../../game-engine/movement-component';
 import {PlayerFactory} from "../player/playerFactory";
 import {PlayerSelectionsModel} from '../rooms/picks/PlayerSelectionsModel';
-import HeroPortrait from '../../client/js/ui/models/HeroPortrait';
+
 
 export default class BattleState implements IGameState {
     players : Array<Player>;
     gameObjects : Array<ServerGameObject>;
+    playerSelections : Array<PlayerSelectionsModel>;
     private playerFactory : PlayerFactory;
+    completeCallback : Function;
 
-    constructor() {
+    constructor(playerSelections : Array<PlayerSelectionsModel>) {
         this.players = Array<Player>();
         this.gameObjects = Array<ServerGameObject>();
         this.playerFactory = new PlayerFactory();
+        this.playerSelections = playerSelections;
     }
 
     update(delta: number) {
@@ -38,7 +41,8 @@ export default class BattleState implements IGameState {
     }
 
     onJoin(client: Client) {
-        let player = this.playerFactory.make(client.id, this.getPlayerSelections(client.id));
+        let playerSel = this.playerSelections.find(s => s.getClientId() == client.id);
+        let player = this.playerFactory.make(client.id, playerSel);
         this.addPlayerToState(player);
     }
 
@@ -60,21 +64,6 @@ export default class BattleState implements IGameState {
         player.gameObjects.forEach(go => this.gameObjects.push(go));
     }
 
-    /**
-     * Temp code until 'selection/picks' game state
-     * is available.
-     *
-     * @returns {PlayerSelections}
-     */
-    getPlayerSelections(clientId) : PlayerSelectionsModel {
-        let playerSelections = new PlayerSelectionsModel(clientId);
-
-        playerSelections.addSelection(new HeroPortrait(1, 'test', 'test'));
-        playerSelections.addSelection(new HeroPortrait(2, 'test', 'test'));
-
-        return playerSelections;
-    }
-
     moveObject(obj, pos) {
         obj.components
             .filter(c => c instanceof MovementComponent)
@@ -83,6 +72,10 @@ export default class BattleState implements IGameState {
                 mc.targetPosition.x = pos.x;
                 mc.targetPosition.y = pos.y;
             })
+    }
+
+    onComplete(cb : Function) {
+        this.completeCallback = cb;
     }
 
     toJSON() {

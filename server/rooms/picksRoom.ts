@@ -3,6 +3,7 @@ import PicksState from "../states/picksState";
 import {SelectionLobbyStatus} from '../../client/js/ui/picks/SelectionLobbyStatus';
 import {TurnStatus} from "./picks/Turn";
 import BattleState from "../states/battleState";
+import {PlayerSelectionsModel} from "./picks/PlayerSelectionsModel";
 
 export class PicksRoom extends Room<any> {
 	delta: number;
@@ -12,7 +13,9 @@ export class PicksRoom extends Room<any> {
 
 		this.setPatchRate(1000 / 20)
 		this.delta = 1000 / 60;
-		this.setState(new PicksState());
+		let state = new PicksState();
+		state.onComplete(this.onPicksComplete);
+		this.setState(state);
 		this.setSimulationInterval(this.tick.bind(this), this.delta);
 	}
 	
@@ -29,19 +32,20 @@ export class PicksRoom extends Room<any> {
 	}
 	
 	onMessage(client, data) {
-		if(client != this.state.activeTurn.activeClient)
-			return;
-
-		if(data.message = 'client_selection') {
-			this.state.handleSelection(client, data);
-		}
+		this.state.onMessage(client, data);
 	}
 
 	onDispose() {
-		this.state.reset();
+		console.log('Disposed of room');
 	}
 	
 	tick() {
 		this.state.update(this.delta);
+	}
+
+	onPicksComplete = (selections : Array<PlayerSelectionsModel>) => {
+		let state = new BattleState(selections);
+		this.setState(state);
+		this.clients.forEach(c => state.onJoin(c));
 	}
 }

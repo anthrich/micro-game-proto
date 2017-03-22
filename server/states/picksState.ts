@@ -15,6 +15,7 @@ export default class PicksState implements IGameState {
     activeTurn : Turn;
     selections : Array<PlayerSelectionsModel>;
     available : Array<HeroPortrait>;
+    completeCallback : Function;
 
     constructor() {
         this.clients = Array<Client>();
@@ -28,11 +29,12 @@ export default class PicksState implements IGameState {
 
     update(delta: number) {
         if(this.status == SelectionLobbyStatus.PICKS_COMPLETE) {
+            this.completeCallback(this.selections);
             return;
         }
-    
+
         if(this.activeTurn == undefined) return;
-        
+
         if(this.isCompleteTurn()) {
             this.startTurn(this.activeTurn.next());
         }
@@ -41,7 +43,12 @@ export default class PicksState implements IGameState {
     }
 
     onMessage(client: Client, data) {
-        console.log(client + "sent message");
+        if(client != this.activeTurn.activeClient)
+            return;
+
+        if(data.message = 'client_selection') {
+            this.handleSelection(client, data);
+        }
     }
 
     onJoin(client: Client) {
@@ -99,7 +106,6 @@ export default class PicksState implements IGameState {
             this.activeTurn.begin();
         } else {
             this.status = SelectionLobbyStatus.PICKS_COMPLETE;
-            console.log(this.status);
         }
     }
 
@@ -121,14 +127,6 @@ export default class PicksState implements IGameState {
         } else {
             return this.clients[0];
         }
-    }
-
-    reset() {
-        this.clients = Array<Client>();
-        this.turns = Array<Turn>();
-        this.status = SelectionLobbyStatus.INIT;
-        this.selections = Array<PlayerSelectionsModel>();
-        this.available = Heroes.get();
     }
 
     toJSON() : {} {
@@ -159,5 +157,9 @@ export default class PicksState implements IGameState {
         
         this.addSelection(client, selection);
         this.activeTurn.complete();
+    }
+
+    onComplete(cb : Function) {
+        this.completeCallback = cb;
     }
 }

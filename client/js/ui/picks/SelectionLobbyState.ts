@@ -18,7 +18,6 @@ export  default class SelectionLobbyState {
     constructor() {
         this.available = Heroes.get();
         this.selections = Array<UiPlayerSelectionsModel>();
-        this.overlayMessage = 'Connecting to server';
         this.showOverlay = true;
         this.status = SelectionLobbyStatus.INIT;
         this.turnElapsed = 0;
