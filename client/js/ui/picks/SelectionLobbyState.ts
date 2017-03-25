@@ -8,14 +8,13 @@ export  default class SelectionLobbyState {
     selections : Array<UiPlayerSelectionsModel>;
     available : Array<HeroPortrait>;
     clientId : string;
-    overlayMessage : string;
     showOverlay : boolean;
     status : number;
     turnTime : number;
     turnElapsed : number;
     isActiveClient : boolean;
 
-    constructor() {
+    constructor(clientId : string) {
         this.available = Heroes.get();
         this.selections = Array<UiPlayerSelectionsModel>();
         this.showOverlay = true;
@@ -23,5 +22,6 @@ export  default class SelectionLobbyState {
         this.turnElapsed = 0;
         this.turnTime = 0;
         this.isActiveClient = false;
+        this.clientId = clientId;
     }
 }

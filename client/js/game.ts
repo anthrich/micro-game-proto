@@ -5,7 +5,7 @@ import CanvasGameStateIntegration from "../../game-engine/canvas-integration/can
 import { Client, Room } from 'colyseus.js';
 import {Player} from "./player/player";
 
-class ExampleGameState extends GameState {
+export default class ExampleGameState extends GameState {
 
   player: Player;
   playerMovementComponent: MovementComponent;
@@ -13,17 +13,19 @@ class ExampleGameState extends GameState {
   room : Room<Object>;
   players : Array<Player>;
 
-  constructor() {
+  constructor(client : Client, room : Room<Object>) {
     super();
+
+    this.client = client;
+    this.room = room;
   }
 
   onGameStateReady() {
     let self = this;
-    this.client = new Client('ws://localhost:3553');
-    this.room = this.client.join("game_room");
     this.players = Array<Player>();
 
     this.room.onUpdate.add(function(state) {
+
       state.gameObjects.forEach(newGo => {
         let currentGo = self.gameObjects.find(eGo => eGo.id === newGo.id);
         if(!currentGo) currentGo = addNewGameObject(newGo);
@@ -88,10 +90,3 @@ class ExampleGameState extends GameState {
     });
   }
 }
-
-(() => {
-  let canvas = <HTMLCanvasElement>document.getElementById("canvas");
-  let gameState = new ExampleGameState();
-  let gameStateIntegration = new CanvasGameStateIntegration(canvas, gameState, window);
-  gameStateIntegration.initialize();
-})();

@@ -6,8 +6,10 @@ import HeroPortrait from '../../client/js/ui/models/HeroPortrait'
 import Heroes from '../rooms/picks/heroes';
 import Turn from "../rooms/picks/Turn";
 import {TurnStatus} from "../rooms/picks/Turn";
+import ServerGameState from "./IGameState";
+import {ServerGameStates} from "./IGameState";
 
-export default class PicksState implements IGameState {
+export default class PicksState extends ServerGameState {
     clients : Array<Client>;
     status : number;
     pickOrder : Array<number>;
@@ -18,6 +20,8 @@ export default class PicksState implements IGameState {
     completeCallback : Function;
 
     constructor() {
+        super(ServerGameStates.PICKS);
+
         this.clients = Array<Client>();
         this.turns = Array<Turn>();
         this.status = SelectionLobbyStatus.INIT;
@@ -131,6 +135,7 @@ export default class PicksState implements IGameState {
 
     toJSON() : {} {
         return {
+            id : this.id,
             status : this.status,
             selections : this.selections,
             available : this.available,

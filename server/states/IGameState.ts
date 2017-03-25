@@ -1,12 +1,23 @@
 import {Client} from "colyseus";
 
-interface IGameState {
-    update (delta: number);
-    onMessage(client: Client, data: any);
-    onLeave(client: Client);
-    onJoin(client: Client, options?: any);
-    onComplete(cb : Function);
+export enum ServerGameStates {
+    PICKS,
+    BATTLE
 }
 
-export default IGameState;
+abstract class ServerGameState {
+    id : number;
+
+    constructor(id : number) {
+        this.id = id;
+    }
+
+    abstract update (delta: number);
+    abstract onMessage(client: Client, data: any);
+    abstract onLeave(client: Client);
+    abstract onJoin(client: Client, options?: any);
+    abstract onComplete(cb : Function);
+}
+
+export default ServerGameState;
 

@@ -1,13 +1,13 @@
 import {Player} from '../../client/js/player/player';
 import {ServerGameObject} from "../game-objects/ServerGameObject";
-import IGameState from "./IGameState";
 import {Client} from "colyseus";
 import MovementComponent from '../../game-engine/movement-component';
 import {PlayerFactory} from "../player/playerFactory";
 import {PlayerSelectionsModel} from '../rooms/picks/PlayerSelectionsModel';
+import ServerGameState from "./IGameState";
+import {ServerGameStates} from "./IGameState";
 
-
-export default class BattleState implements IGameState {
+export default class BattleState extends ServerGameState{
     players : Array<Player>;
     gameObjects : Array<ServerGameObject>;
     playerSelections : Array<PlayerSelectionsModel>;
@@ -15,6 +15,8 @@ export default class BattleState implements IGameState {
     completeCallback : Function;
 
     constructor(playerSelections : Array<PlayerSelectionsModel>) {
+        super(ServerGameStates.BATTLE);
+
         this.players = Array<Player>();
         this.gameObjects = Array<ServerGameObject>();
         this.playerFactory = new PlayerFactory();
@@ -32,7 +34,7 @@ export default class BattleState implements IGameState {
 
         data.selected.forEach((s) =>{
             let playerObject = currentPlayer.gameObjects
-                .find(go => go.id = s.id);
+                .find(go => go.id = s);
 
             if(!playerObject) return;
 
@@ -80,8 +82,9 @@ export default class BattleState implements IGameState {
 
     toJSON() {
         return {
-            "players" : this.players,
-            "gameObjects" : this.gameObjects
+            id : this.id,
+            players : this.players,
+            gameObjects : this.gameObjects
         }
     }
 }

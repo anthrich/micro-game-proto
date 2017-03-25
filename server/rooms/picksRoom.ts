@@ -4,6 +4,8 @@ import {SelectionLobbyStatus} from '../../client/js/ui/picks/SelectionLobbyStatu
 import {TurnStatus} from "./picks/Turn";
 import BattleState from "../states/battleState";
 import {PlayerSelectionsModel} from "./picks/PlayerSelectionsModel";
+import ServerGameState from "../states/IGameState";
+import NewStateMessage from "./messages/NewStateMessage";
 
 export class PicksRoom extends Room<any> {
 	delta: number;
@@ -24,6 +26,7 @@ export class PicksRoom extends Room<any> {
 	}
 	
 	onJoin(client) {
+		this.broadcast(new NewStateMessage(this.state));
 		this.state.onJoin(client);
 	}
 
@@ -45,7 +48,12 @@ export class PicksRoom extends Room<any> {
 
 	onPicksComplete = (selections : Array<PlayerSelectionsModel>) => {
 		let state = new BattleState(selections);
+		this.changeState(state);
+	}
+
+	changeState(state : ServerGameState) {
 		this.setState(state);
 		this.clients.forEach(c => state.onJoin(c));
+		this.broadcast(new NewStateMessage(this.state));
 	}
 }

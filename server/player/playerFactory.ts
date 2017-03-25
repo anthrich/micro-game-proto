@@ -20,12 +20,6 @@ export class PlayerFactory {
         this.colors.push('#e6a04d');
     }
 
-    /**
-     * @param clientId
-     * @param playerSelections
-     * @param updateGameState
-     * @returns {Player}
-     */
     make(clientId : string, playerSelections : PlayerSelectionsModel) : Player
     {
         var player = new Player(this.playerCount, this.colors[this.playerCount], clientId);

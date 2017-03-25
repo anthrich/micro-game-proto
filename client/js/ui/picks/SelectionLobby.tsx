@@ -2,31 +2,27 @@ import * as React from 'react';
 import SelectionLobbyState from "./SelectionLobbyState";
 import PlayerSelections from "./PlayerSelections";
 import AvailableSelections from "./AvailableSelections";
-import {SelectionLobbyInterface} from "./SelectionLobbyInterface";
 import LoadingOverlay from '../LoadingOverlay';
 import {SelectionLobbyStatus} from './SelectionLobbyStatus';
 import CountdownClock from "./../CountdownClock";
 import UiPlayerSelectionsModel from "../models/UiPlayerSelectionsModel";
 import {Room} from "colyseus.js";
+import {ServerGameStates} from "../../../../server/states/IGameState";
+import {ColyseusLobbyInterface} from "../ColyseusLobbyInterface";
 
-export default class SelectionLobby extends React.Component<SelectionLobbyInterface, SelectionLobbyState> {
+export default class SelectionLobby extends React.Component<ColyseusLobbyInterface, SelectionLobbyState> {
     room : Room<any>;
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = new SelectionLobbyState();
+        this.state = new SelectionLobbyState(this.props.client.id);
         this.room = this.props.colyseus.room;
-        let client = this.props.colyseus.client;
-
-        this.room.onJoin.add(() => {
-            this.setState({
-                clientId : client.id
-            });
-        });
 
         this.room.onUpdate.add((serverState) => {
-            console.log(serverState);
+            if(serverState.id != ServerGameStates.PICKS)
+                return;
+
             this.setState((prevState) => {
                 serverState.selections.forEach((s) => {
                     this.updateSelections(prevState, s);
@@ -57,9 +53,9 @@ export default class SelectionLobby extends React.Component<SelectionLobbyInterf
     render () {
         if(this.isLoadingState(this.state.status)) {
             return this.renderNotice();
+        } else {
+            return this.renderPicks();
         }
-
-        return this.renderPicks();
     }
 
     renderNotice() {
