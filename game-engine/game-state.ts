@@ -1,5 +1,6 @@
 import GameObject from "./game-object";
 import IDrawableFactory from "./drawable-factory";
+import Vector2 from "./vector2";
 abstract class GameState {
 
   gameObjects: Array<GameObject>;

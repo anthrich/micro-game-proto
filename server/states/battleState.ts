@@ -6,6 +6,7 @@ import {PlayerFactory} from "../player/playerFactory";
 import {PlayerSelectionsModel} from '../rooms/picks/PlayerSelectionsModel';
 import ServerGameState from "./IGameState";
 import {ServerGameStates} from "./IGameState";
+import Vector2 from "../../game-engine/vector2";
 
 export default class BattleState extends ServerGameState{
     players : Array<Player>;
@@ -26,6 +27,13 @@ export default class BattleState extends ServerGameState{
     update(delta: number) {
         this.gameObjects.forEach((go) => {
             go.update(delta);
+            this.gameObjects.filter(cgo => Vector2.distance(go.position, cgo.position) < 40)
+		        .forEach(cgo => {
+                    let diff = Vector2.subtract(go.position, cgo.position);
+                    let diffDirection = Vector2.normalise(diff);
+                    go.position = Vector2.sum(go.position, Vector2.scale(go.speed / 1000 * delta * 2, diffDirection));
+                    cgo.position = Vector2.subtract(cgo.position, Vector2.scale(cgo.speed / 1000 * delta * 2, diffDirection));
+                });
         });
     }
 
@@ -71,8 +79,7 @@ export default class BattleState extends ServerGameState{
             .filter(c => c instanceof MovementComponent)
             .forEach((c) => {
                 let mc = c as MovementComponent;
-                mc.targetPosition.x = pos.x;
-                mc.targetPosition.y = pos.y;
+                mc.setTargetPosition(pos);
             })
     }
 
