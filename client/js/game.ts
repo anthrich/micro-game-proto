@@ -94,14 +94,18 @@ export default class ExampleGameState extends GameState {
   }
 
   onKeyUp(e : KeyboardEvent) {
+    this.keyboard.registerKeysUp(e);
+
     this.keyboard.up('tab', function() {
       console.log('TAB key released');
     });
   }
 
   onKeyDown(e : KeyboardEvent) {
-    this.keyboard.down(['up', 'down'], function() {
-      console.log('up or down arrow key pressed');
+    this.keyboard.registerKeysDown(e);
+
+    this.keyboard.down(['any number'], () => {
+      let key = this.keyboard.lastKey();
     })
   }
 }

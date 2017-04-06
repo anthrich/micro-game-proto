@@ -1,8 +1,5 @@
 
 export default class Keyboard {
-
-    element : any;
-
     KEY_NAMES_BY_CODE : Object;
     KEY_CODES_BY_NAME : Object;
     MODIFIERS : Array<string>;
@@ -12,8 +9,8 @@ export default class Keyboard {
     lastKeyCode : number;
     keysDown : any;
     keysUp : any;
-    downHandler : any;
-    upHandler : any;
+    registerKeysDown : any;
+    registerKeysUp : any;
     lastModifiers : any;
 
     constructor() {
@@ -54,7 +51,7 @@ export default class Keyboard {
     }
 
     initialize() {
-        let i, that = this;
+        let i;
 
         this.lastKeyCode = -1;
         this.lastModifiers = {};
@@ -69,16 +66,8 @@ export default class Keyboard {
             this.keysUp['any ' + this.WILDCARD_TYPES[i]] = [];
         }
 
-        this.downHandler = this.handler('down');
-        this.upHandler = this.handler('up');
-
-        this.registerEvent(this.element, 'keydown', this.downHandler);
-        this.registerEvent(this.element, 'keyup', this.upHandler);
-        this.registerEvent(window, 'unload', function unloader() {
-            this.unregisterEvent(that.element, 'keydown', that.downHandler);
-            this.unregisterEvent(that.element, 'keyup', that.upHandler);
-            this.unregisterEvent(window, 'unload', unloader);
-        });
+        this.registerKeysDown = this.handler('down');
+        this.registerKeysUp = this.handler('up');
     };
 
     registerEvent(element, eventName, func) {
@@ -242,7 +231,7 @@ export default class Keyboard {
         return this.delegate('up', keys, func);
     };
 
-    lastKey(modifier) {
+    lastKey(modifier?) {
         if(!modifier)
             return this.keyName(this.lastKeyCode);
 
