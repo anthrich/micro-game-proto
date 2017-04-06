@@ -16,6 +16,8 @@ export default class BattleLobby extends React.Component<ColyseusLobbyInterface,
     }
 
     render () {
-       return <canvas id="canvas"></canvas>;
+        return (
+            <canvas id="canvas" tabIndex={1}></canvas>
+        );
     }
 }

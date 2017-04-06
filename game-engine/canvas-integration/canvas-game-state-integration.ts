@@ -1,11 +1,13 @@
 import GameState from "../game-state";
 import CanvasDrawableFactory from "./canvas-drawable-factory";
+import Keyboard from "../input/Keyboard";
 class CanvasGameStateIntegration {
 
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private gameState : GameState;
   private window: Window;
+  protected keyboard;
 
   constructor(canvas: HTMLCanvasElement, gameState: GameState, window: Window) {
     this.canvas = canvas;
@@ -20,6 +22,14 @@ class CanvasGameStateIntegration {
 
     this.canvas.addEventListener('mousedown', (e) => {
       this.gameState.onMouseDown(e.clientX, e.clientY);
+    });
+
+    this.canvas.addEventListener('keydown', (e) => {
+      this.gameState.onKeyDown(e);
+    });
+
+    this.canvas.addEventListener('keyup', (e) => {
+      this.gameState.onKeyUp(e);
     });
 
     let drawLoop = () => {

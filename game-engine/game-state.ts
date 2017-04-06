@@ -29,6 +29,8 @@ abstract class GameState {
 
   abstract onGameStateReady();
   abstract onMouseDown(x: number, y: number);
+  abstract onKeyUp(e : KeyboardEvent);
+  abstract onKeyDown(e : KeyboardEvent);
 }
 
 export default GameState;

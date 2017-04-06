@@ -4,6 +4,7 @@ import Circle from './circle';
 import CanvasGameStateIntegration from "../../game-engine/canvas-integration/canvas-game-state-integration";
 import { Client, Room } from 'colyseus.js';
 import {Player} from "./player/player";
+import Keyboard from "../../game-engine/input/Keyboard";
 
 export default class ExampleGameState extends GameState {
 
@@ -12,12 +13,14 @@ export default class ExampleGameState extends GameState {
   client : Client;
   room : Room<Object>;
   players : Array<Player>;
+  keyboard : Keyboard;
 
   constructor(client : Client, room : Room<Object>) {
     super();
 
     this.client = client;
     this.room = room;
+    this.keyboard = new Keyboard();
   }
 
   onGameStateReady() {
@@ -88,5 +91,17 @@ export default class ExampleGameState extends GameState {
       "x": x,
       "y": y
     });
+  }
+
+  onKeyUp(e : KeyboardEvent) {
+    this.keyboard.up('tab', function() {
+      console.log('TAB key released');
+    });
+  }
+
+  onKeyDown(e : KeyboardEvent) {
+    this.keyboard.down(['up', 'down'], function() {
+      console.log('up or down arrow key pressed');
+    })
   }
 }
