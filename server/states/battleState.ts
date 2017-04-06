@@ -38,11 +38,11 @@ export default class BattleState extends ServerGameState{
     }
 
     onMessage(client: Client, data) {
-        let currentPlayer = this.getPlayerByClientId(client.id);
-
         data.selected.forEach((s) =>{
+            let currentPlayer = this.getPlayerByClientId(client.id);
+
             let playerObject = currentPlayer.gameObjects
-                .find(go => go.id = s);
+                .find(go => go.id == s);
 
             if(!playerObject) return;
 

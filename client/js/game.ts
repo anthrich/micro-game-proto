@@ -80,8 +80,7 @@ export default class ExampleGameState extends GameState {
   }
 
   onMouseDown(x: number, y: number) {
-    let selectedObjects = this.players
-        .find(pl => pl.clientId == this.client.id)
+    let selectedObjects = this.getCurrentPlayer()
         .selectedGameObjects;
 
     if(!selectedObjects) return;
@@ -103,9 +102,19 @@ export default class ExampleGameState extends GameState {
 
   onKeyDown(e : KeyboardEvent) {
     this.keyboard.registerKeysDown(e);
+    let player = this.getCurrentPlayer();
 
     this.keyboard.down(['any number'], () => {
-      let key = this.keyboard.lastKey();
+      let objIndex = this.keyboard.lastKey() - 1;
+
+      if(objIndex > player.gameObjects.length) return;
+
+      player.selectedGameObjects = [player.gameObjects[objIndex].id];
     })
+  }
+
+  getCurrentPlayer() {
+    return this.players
+        .find(pl => pl.clientId == this.client.id)
   }
 }

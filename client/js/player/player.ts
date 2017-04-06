@@ -28,10 +28,6 @@ export class Player {
     addObject(obj : GameObject)
     {
         this.gameObjects.push(obj);
-
-        if(this.gameObjects.length == 1) {
-            this.selectedGameObjects.push(obj.id);
-        }
     }
 
     /**
