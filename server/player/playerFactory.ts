@@ -4,6 +4,7 @@ import {Player} from '../../client/js/player/player';
 import {PlayerSelectionsModel} from "../rooms/picks/PlayerSelectionsModel";
 import {ServerGameObject} from "../game-objects/ServerGameObject";
 import HeroPortrait from '../../client/js/ui/models/HeroPortrait';
+import Vector2 from "../../game-engine/vector2";
 
 var uuid = require('uuid/v1');
 
@@ -23,6 +24,7 @@ export class PlayerFactory {
     make(clientId : string, playerSelections : PlayerSelectionsModel) : Player
     {
         var player = new Player(this.playerCount, this.colors[this.playerCount], clientId);
+        player.setStartingZone(new Vector2(this.playerCount * 300 + 200, 400), 200);
 
         this.playerCount ++;
 
