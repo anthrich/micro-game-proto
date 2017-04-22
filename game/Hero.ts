@@ -1,12 +1,14 @@
 import {IHeroPortrait} from "./IHeroPortrait";
-export class Hero implements IHeroPortrait  {
-    id : number;
+import GameObject from "../game-engine/game-object";
+
+export class Hero extends GameObject implements IHeroPortrait  {
+    id: string;
     name : string;
     url : string;
     available : boolean;
 
     constructor(id, name, url) {
-        this.id = id;
+        super(id);
         this.name = name;
         this.url = url;
         this.available = true;

@@ -1,5 +1,5 @@
 export interface IHeroPortrait {
-	id : number;
+	id : string;
 	name : string;
 	url : string;
 	available : boolean;

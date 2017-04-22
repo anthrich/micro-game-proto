@@ -9,7 +9,6 @@ import Keyboard from "../../game-engine/input/Keyboard";
 export default class ClientGameState extends GameState {
 
   player: Player;
-  playerMovementComponent: MovementComponent;
   client : Client;
   room : Room<Object>;
   players : Array<Player>;

@@ -7,6 +7,7 @@ import {TurnStatus} from "../rooms/picks/Turn";
 import ServerGameState from "./IGameState";
 import {ServerGameStates} from "./IGameState";
 import {IHeroPortrait} from "../../game/IHeroPortrait";
+import {Hero} from "../../game/Hero";
 
 export default class PicksState extends ServerGameState {
     clients : Array<Client>;
@@ -15,7 +16,7 @@ export default class PicksState extends ServerGameState {
     turns: Array<Turn>;
     activeTurn : Turn;
     selections : Array<PlayerSelectionsModel>;
-    available : Array<IHeroPortrait>;
+    available : Array<Hero>;
     completeCallback : Function;
 
     constructor() {
@@ -142,14 +143,14 @@ export default class PicksState extends ServerGameState {
         }
     }
 
-    addSelection(client : Client, selection : IHeroPortrait) {
+    addSelection(client : Client, selection : Hero) {
         this.selections.find(s => s.getClientId() == client.id)
             .addSelection(selection);
 
         selection.available = false;
     }
 
-    getSelection(id) : IHeroPortrait {
+    getSelection(id) : Hero {
         return this.available.find(s => s.id == id);
     }
     
