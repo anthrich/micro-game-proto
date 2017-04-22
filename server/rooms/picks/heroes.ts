@@ -1,4 +1,4 @@
-import HeroPortrait from '../../../client/js/ui/models/HeroPortrait';
+import HeroPortrait from '../../../game/Hero';
 
 export default {
     get : () => {

@@ -1,6 +1,7 @@
 import {PlayerSelectionsModel} from "../../../../server/rooms/picks/PlayerSelectionsModel";
-import {HeroPortraitInterface, default as HeroPortrait} from "./HeroPortrait";
 import NullHeroPortrait from "./NullHeroPortrait";
+import {IHeroPortrait} from "../../../../game/IHeroPortrait";
+import {Hero} from "../../../../game/Hero";
 
 export default class UiPlayerSelectionsModel extends PlayerSelectionsModel {
 
@@ -12,13 +13,13 @@ export default class UiPlayerSelectionsModel extends PlayerSelectionsModel {
         }
     }
 
-    sync(selections : Array<HeroPortraitInterface>) {
+    sync(selections : Array<IHeroPortrait>) {
         selections.forEach((item,index) => {
             this.addSelectionAt(index, item);
         });
     }
 
-    addSelectionAt(index, item : HeroPortraitInterface) {
+    addSelectionAt(index, item : IHeroPortrait) {
         if(this.selections[index] && this.selections[index].id == item.id)
             return;
 
@@ -26,6 +27,6 @@ export default class UiPlayerSelectionsModel extends PlayerSelectionsModel {
             throw new Error('Out of bounds. A player can only have ' + this.maxSelections + ' selections');
         }
 
-        this.selections[index] = new HeroPortrait(item.id, item['name'], item['url']);
+        this.selections[index] = new Hero(item.id, item['name'], item['url']);
     }
 }

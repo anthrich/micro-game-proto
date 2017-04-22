@@ -1,7 +1,15 @@
-import HeroPortrait from "./HeroPortrait";
+import {IHeroPortrait} from "../../../../game/IHeroPortrait";
 
-export default class NullHeroPortrait extends HeroPortrait {
+export default class NullHeroPortrait implements IHeroPortrait {
+    id: number;
+    name: string;
+    url: string;
+    available: boolean;
+    
     constructor() {
-        super('', '', '');
+        this.id = null;
+        this.name = '';
+        this.url = '';
+        this.available = false;
     }
 }

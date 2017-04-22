@@ -1,7 +1,7 @@
-import HeroPortrait from "../models/HeroPortrait";
+import {IHeroPortrait} from "../../../../game/IHeroPortrait";
 
 export interface AvailableSelectionsInterface {
-    heroes : Array<HeroPortrait>,
+    heroes : Array<IHeroPortrait>,
     isActive : boolean,
     onSelect : Function
 }
