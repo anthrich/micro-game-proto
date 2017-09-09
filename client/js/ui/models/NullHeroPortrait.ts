@@ -1,7 +1,13 @@
-import HeroPortrait from "./HeroPortrait";
+import {Hero} from "../../../../game/Hero";
 
-export default class NullHeroPortrait extends HeroPortrait {
+export default class NullHeroPortrait extends Hero {
+    id: string;
+    name: string;
+    url: string;
+    available: boolean;
+    
     constructor() {
-        super('', '', '');
+        super('', '', '')
+        this.available = false;
     }
 }

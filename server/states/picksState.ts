@@ -1,13 +1,13 @@
-import IGameState from "./IGameState";
 import {Client} from "colyseus";
 import {SelectionLobbyStatus} from '../../client/js/ui/picks/SelectionLobbyStatus';
 import {PlayerSelectionsModel} from '../rooms/picks/PlayerSelectionsModel';
-import HeroPortrait from '../../client/js/ui/models/HeroPortrait'
 import Heroes from '../rooms/picks/heroes';
 import Turn from "../rooms/picks/Turn";
 import {TurnStatus} from "../rooms/picks/Turn";
 import ServerGameState from "./IGameState";
 import {ServerGameStates} from "./IGameState";
+import {IHeroPortrait} from "../../game/IHeroPortrait";
+import {Hero} from "../../game/Hero";
 
 export default class PicksState extends ServerGameState {
     clients : Array<Client>;
@@ -16,7 +16,7 @@ export default class PicksState extends ServerGameState {
     turns: Array<Turn>;
     activeTurn : Turn;
     selections : Array<PlayerSelectionsModel>;
-    available : Array<HeroPortrait>;
+    available : Array<Hero>;
     completeCallback : Function;
 
     constructor() {
@@ -143,14 +143,14 @@ export default class PicksState extends ServerGameState {
         }
     }
 
-    addSelection(client : Client, selection : HeroPortrait) {
+    addSelection(client : Client, selection : Hero) {
         this.selections.find(s => s.getClientId() == client.id)
             .addSelection(selection);
 
         selection.available = false;
     }
 
-    getSelection(id) : HeroPortrait {
+    getSelection(id) : Hero {
         return this.available.find(s => s.id == id);
     }
     

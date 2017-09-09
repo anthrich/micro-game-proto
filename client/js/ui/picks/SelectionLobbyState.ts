@@ -1,12 +1,11 @@
-import {PlayerSelectionsModel} from "../../../../server/rooms/picks/PlayerSelectionsModel";
-import HeroPortrait from "../models/HeroPortrait";
 import Heroes from '../../../../server/rooms/picks/heroes';
 import {SelectionLobbyStatus} from "./SelectionLobbyStatus";
 import UiPlayerSelectionsModel from "../models/UiPlayerSelectionsModel";
+import {IHeroPortrait} from "../../../../game/IHeroPortrait";
 
 export  default class SelectionLobbyState {
     selections : Array<UiPlayerSelectionsModel>;
-    available : Array<HeroPortrait>;
+    available : Array<IHeroPortrait>;
     clientId : string;
     showOverlay : boolean;
     status : number;

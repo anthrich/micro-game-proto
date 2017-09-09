@@ -1,10 +1,10 @@
 "use strict";
 
-import {Player} from '../../client/js/player/player';
-import {PlayerSelectionsModel} from "../rooms/picks/PlayerSelectionsModel";
-import {ServerGameObject} from "../game-objects/ServerGameObject";
-import HeroPortrait from '../../client/js/ui/models/HeroPortrait';
-import Vector2 from "../../game-engine/vector2";
+import {Player} from './Player';
+import {PlayerSelectionsModel} from "../server/rooms/picks/PlayerSelectionsModel";
+import {ServerGameObject} from "../server/game-objects/ServerGameObject";
+import {Hero} from './Hero';
+import Vector2 from "../game-engine/vector2";
 
 var uuid = require('uuid/v1');
 
@@ -15,7 +15,6 @@ export class PlayerFactory {
 
     constructor() {
         this.playerCount = 0;
-
         this.colors = Array<string>();
         this.colors.push('#ff69be');
         this.colors.push('#e6a04d');
@@ -43,7 +42,7 @@ export class PlayerFactory {
      * @param player
      * @param playerSelections
      */
-    protected createGameObjects(player, playerSelections: Array<HeroPortrait>)
+    protected createGameObjects(player, playerSelections: Array<Hero>)
     {
         let payload = Array<ServerGameObject>();
 

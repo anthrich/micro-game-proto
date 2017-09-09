@@ -3,13 +3,12 @@ import GameState from '../../game-engine/game-state';
 import Circle from './circle';
 import CanvasGameStateIntegration from "../../game-engine/canvas-integration/canvas-game-state-integration";
 import { Client, Room } from 'colyseus.js';
-import {Player} from "./player/player";
+import {Player} from "../../game/Player";
 import Keyboard from "../../game-engine/input/Keyboard";
 
-export default class ExampleGameState extends GameState {
+export default class ClientGameState extends GameState {
 
   player: Player;
-  playerMovementComponent: MovementComponent;
   client : Client;
   room : Room<Object>;
   players : Array<Player>;
