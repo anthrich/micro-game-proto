@@ -1,7 +1,8 @@
 import {IHeroPortrait} from "./IHeroPortrait";
 import GameObject from "../game-engine/game-object";
+import IDrawable from "../game-engine/drawable";
 
-export class Hero extends GameObject implements IHeroPortrait  {
+export class Hero extends GameObject implements IHeroPortrait {
     id: string;
     name : string;
     url : string;

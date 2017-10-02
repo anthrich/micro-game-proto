@@ -27,12 +27,12 @@ export default class BattleState extends ServerGameState{
     update(delta: number) {
         this.gameObjects.forEach((go) => {
             go.update(delta);
-            this.gameObjects.filter(cgo => Vector2.distance(go.position, cgo.position) < 40)
-		        .forEach(cgo => {
-                    let diff = Vector2.subtract(go.position, cgo.position);
+            this.gameObjects.filter(cgo => Vector2.distance(go.position, cgo.position) < 16)
+		        .forEach(currentGo => {
+                    let diff = Vector2.subtract(go.position, currentGo.position);
                     let diffDirection = Vector2.normalise(diff);
                     go.position = Vector2.sum(go.position, Vector2.scale(go.speed / 1000 * delta * 2, diffDirection));
-                    cgo.position = Vector2.subtract(cgo.position, Vector2.scale(cgo.speed / 1000 * delta * 2, diffDirection));
+                    currentGo.position = Vector2.subtract(currentGo.position, Vector2.scale(currentGo.speed / 1000 * delta * 2, diffDirection));
                 });
         });
     }

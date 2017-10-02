@@ -1,7 +1,7 @@
 import IDrawable from "../drawable";
 import Vector2 from "../vector2";
 
-class CanvasImageRenderer implements IDrawable {
+export class CanvasImageRenderer implements IDrawable {
 	
 	private canvas : HTMLCanvasElement;
 	private ctx : CanvasRenderingContext2D;
@@ -15,7 +15,12 @@ class CanvasImageRenderer implements IDrawable {
 	}
 	
 	draw(position: Vector2) {
-		if(!this.image.complete) return;
+		if (!this.image.complete) return;
 		this.ctx.drawImage(this.image, position.x, position.y);
+		this.ctx.beginPath();
+		this.ctx.arc(position.x, position.y, 1, 0, Math.PI * 2, true);
+		this.ctx.closePath();
+		this.ctx.fillStyle = "red";
+		this.ctx.fill();
 	}
 }

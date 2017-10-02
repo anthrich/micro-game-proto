@@ -1,8 +1,9 @@
 import Vector2 from './vector2';
 import Component from './component';
 import Drawable from "./drawable";
+import IDrawable from "./drawable";
 
-abstract class GameObject {
+abstract class GameObject implements IDrawable {
 
   position: Vector2;
   drawPosition: Vector2;

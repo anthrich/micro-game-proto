@@ -5,6 +5,8 @@ import CanvasGameStateIntegration from "../../game-engine/canvas-integration/can
 import { Client, Room } from 'colyseus.js';
 import {Player} from "../../game/Player";
 import Keyboard from "../../game-engine/input/Keyboard";
+import GameObject from "../../game-engine/game-object";
+import {Hero} from "../../game/Hero";
 
 export default class ClientGameState extends GameState {
 
@@ -51,9 +53,9 @@ export default class ClientGameState extends GameState {
      * @returns {Circle}
      */
     let addNewGameObject = (newObject) => {
-      let newGo = new Circle(newObject.id, 20, '#3b87b1', self.drawableFactory.getCircleRenderer());
+      let newGo = new Hero(newObject.id, newObject.name, newObject.url);
+      newGo.addDrawable(this.drawableFactory.getImageRenderer("/img/mychar.png"));
       self.gameObjects.push(newGo);
-
       return newGo;
     };
 

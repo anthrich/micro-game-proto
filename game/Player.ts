@@ -48,8 +48,7 @@ export class Player {
     /**
      * @param obj GameObject
      */
-    addObject(obj : GameObject)
-    {
+    addObject(obj : GameObject) {
         obj.setPosition(this.getRandomStartingPosition());
         this.gameObjects.push(obj);
     }

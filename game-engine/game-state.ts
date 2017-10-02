@@ -22,6 +22,7 @@ abstract class GameState {
   }
 
   draw() {
+    this.gameObjects.sort((a, b) => a.position.y - b.position.y);
     this.gameObjects.forEach((go) => {
       go.draw();
     });
