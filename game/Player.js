@@ -53,7 +53,3 @@ class Player {
     }
 }
 exports.Player = Player;
-<<<<<<< Updated upstream
-//# sourceMappingURL=Player.js.map
-=======
->>>>>>> Stashed changes

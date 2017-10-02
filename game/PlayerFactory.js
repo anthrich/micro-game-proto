@@ -36,7 +36,3 @@ class PlayerFactory {
     }
 }
 exports.PlayerFactory = PlayerFactory;
-<<<<<<< Updated upstream
-//# sourceMappingURL=PlayerFactory.js.map
-=======
->>>>>>> Stashed changes
