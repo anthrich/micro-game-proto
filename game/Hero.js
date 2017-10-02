@@ -10,3 +10,4 @@ class Hero extends game_object_1.default {
     }
 }
 exports.Hero = Hero;
+//# sourceMappingURL=Hero.js.map
