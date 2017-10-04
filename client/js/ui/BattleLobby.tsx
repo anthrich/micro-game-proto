@@ -1,13 +1,10 @@
 import * as React from 'react';
 import ExampleGameState from "../game";
 import CanvasGameStateIntegration from "../../../game-engine/canvas-integration/canvas-game-state-integration";
-import {ColyseusLobbyInterface} from "./ColyseusLobbyInterface";
+import IColyseusLobby from "./ColyseusLobbyInterface";
 
-export default class BattleLobby extends React.Component<ColyseusLobbyInterface, any> {
-    constructor(props,context) {
-        super(props,context);
-    }
-
+export default class BattleLobby extends React.Component<IColyseusLobby, any> {
+   
     componentDidMount() {
         let canvas = document.getElementById("canvas") as HTMLCanvasElement;
         let gameState = new ExampleGameState(this.props.client, this.props.colyseus.room);

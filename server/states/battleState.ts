@@ -52,6 +52,7 @@ export default class BattleState extends ServerGameState{
 
     onJoin(client: Client) {
         let playerSel = this.playerSelections.find(s => s.getClientId() == client.id);
+	    this.playerFactory.setStartingZone(new Vector2(this.players.length * 300 + 200, 400), 200);
         let player = this.playerFactory.make(client.id, playerSel);
         this.addPlayerToState(player);
     }

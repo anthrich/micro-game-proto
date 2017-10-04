@@ -26,7 +26,7 @@ export default class PicksState extends ServerGameState {
         this.turns = Array<Turn>();
         this.status = SelectionLobbyStatus.INIT;
         this.pickOrder = [0,1,1,0,1,0,1,0,1,0];
-        this.selections = Array<PlayerSelectionsModel>();
+        this.selections = new Array<PlayerSelectionsModel>();
         this.available = Heroes.get();
         this.completeTurn = this.completeTurn.bind(this);
     }

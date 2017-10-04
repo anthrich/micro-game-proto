@@ -5,3 +5,4 @@ server/**/*.js
 game-engine/**/*.js
 .idea
 **/*.js.map
+**/*.js

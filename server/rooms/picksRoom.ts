@@ -16,7 +16,7 @@ export class PicksRoom extends Room<any> {
 		this.setPatchRate(1000 / 20)
 		this.delta = 1000 / 60;
 		let state = new PicksState();
-		state.onComplete(this.onPicksComplete);
+		state.onComplete(this.onPicksComplete.bind(this));
 		this.setState(state);
 		this.setSimulationInterval(this.tick.bind(this), this.delta);
 	}

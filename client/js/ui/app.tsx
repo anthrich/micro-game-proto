@@ -3,15 +3,21 @@ import SelectionLobby from './picks/SelectionLobby';
 import {ServerGameStates} from "../../../server/states/IGameState";
 import BattleLobby from "./BattleLobby";
 import {Client} from "colyseus.js";
+import ColyseusConnector from "../colyseusConnector";
 
 class AppState {
     game_state : number;
     client : Client;
 }
 
-export default class App extends React.Component<any, AppState> {
-    constructor(props,context) {
-        super(props,context);
+interface AppProps {
+    colyseus : ColyseusConnector;
+}
+
+export default class App extends React.Component<AppProps, AppState> {
+   
+    constructor(props, context) {
+        super(props, context);
 
         this.state = new AppState();
 
@@ -26,7 +32,6 @@ export default class App extends React.Component<any, AppState> {
                 this.setState({game_state : message.data.id});
             }
         });
-
     }
 
     render () {
@@ -37,6 +42,6 @@ export default class App extends React.Component<any, AppState> {
             return (<SelectionLobby colyseus={this.props.colyseus} client={this.state.client} />);
 
         if(this.state.game_state == ServerGameStates.BATTLE)
-            return  <BattleLobby colyseus={this.props.colyseus} client={this.state.client}/>
+            return  <BattleLobby colyseus={this.props.colyseus} client={this.state.client} />
     }
 }

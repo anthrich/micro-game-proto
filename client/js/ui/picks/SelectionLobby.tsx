@@ -8,9 +8,9 @@ import CountdownClock from "./../CountdownClock";
 import UiPlayerSelectionsModel from "../models/UiPlayerSelectionsModel";
 import {Room} from "colyseus.js";
 import {ServerGameStates} from "../../../../server/states/IGameState";
-import {ColyseusLobbyInterface} from "../ColyseusLobbyInterface";
+import IColyseusLobby from "../ColyseusLobbyInterface";
 
-export default class SelectionLobby extends React.Component<ColyseusLobbyInterface, SelectionLobbyState> {
+export default class SelectionLobby extends React.Component<IColyseusLobby, SelectionLobbyState> {
     room : Room<any>;
 
     constructor(props,context) {
@@ -20,9 +20,10 @@ export default class SelectionLobby extends React.Component<ColyseusLobbyInterfa
         this.room = this.props.colyseus.room;
 
         this.room.onUpdate.add((serverState) => {
-            if(serverState.id != ServerGameStates.PICKS)
+            if(serverState.id != ServerGameStates.PICKS) {
                 return;
-
+            }
+            
             this.setState((prevState) => {
                 serverState.selections.forEach((s) => {
                     this.updateSelections(prevState, s);
